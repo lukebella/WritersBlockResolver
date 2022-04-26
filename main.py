@@ -48,40 +48,43 @@ next_record = iterator.get_next()
 
 #-----------------------------------------------------------------------------
 
-uploaded_tuple = librosa.load('C:/Users/lenovo/Tesi/prova/11 A BIT OF SHAME.wav',48000)
-uploaded = bytearray(str(uploaded_tuple), 'utf-8')
+#aprire file modalità binaria con .open()
 
+name_of_file = "provafileeeee.wav"
+f = open(name_of_file,'r+b')
+#value = f.read()
+
+def make_dict(f):
+    return {f.name:f.read()}
+
+uploaded = make_dict(f)
+#print(uploaded)
 to_process = []
-#frame = uploaded.readframes()
-print('User uploaded file "{name}" with length {length} bytes'.format(
-    name=uploaded, length=len(uploaded)))
-wav_data = uploaded
-example_list = audio_label_data_utils.process_record(
-        wav_data=wav_data,
-        sample_rate=hparams.sample_rate,
-        ns=note_seq.NoteSequence(),
-        example_id=uploaded,
-        min_length=0,
-        max_length=-1,
-        allow_empty_notesequence=True)
-#assert len(example_list) == 1
-#to_process.append(example_list[0].SerializeToString())
+for fn in uploaded.keys():
+    print('User uploaded file "{name}" with length {length} bytes'.format(name=fn, length=len(uploaded[fn])))
+    wav_data = uploaded[fn]
+    example_list = list(
+        audio_label_data_utils.process_record(
+            wav_data=wav_data,
+            sample_rate=hparams.sample_rate,
+            ns=note_seq.NoteSequence(),
+            example_id=fn,
+            min_length=0,
+            max_length=-1,
+            allow_empty_notesequence=True))
+    assert len(example_list) == 1
+    to_process.append(example_list[0].SerializeToString())
 
-print('Processing complete for', uploaded)
+    print('Processing complete for', fn)
 
 sess = tf.Session()
-
-#dt = np.dtype(example_list)    #added
-#print("kind= ",dt.kind)        #added
-
-#examples = tf.compat.v1.placeholder(np.dtype(example_list))    #added
 
 sess.run([
     tf.initializers.global_variables(),
     tf.initializers.local_variables()
 ])
 
-sess.run(iterator.initializer, {examples: example_list})
+sess.run(iterator.initializer, {examples: to_process})
 
 
 def transcription_data(params):
@@ -90,3 +93,7 @@ def transcription_data(params):
 
 
 input_fn = infer_util.labels_to_features_wrapper(transcription_data)
+
+#===================================================================================================
+
+
