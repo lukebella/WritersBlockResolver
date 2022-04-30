@@ -104,7 +104,7 @@ note_seq.plot_sequence(sequence_prediction)
 #============================================================================================================================
 
 
-from tensor2tensor.import models
+from tensor2tensor import models
 from tensor2tensor import problems
 from tensor2tensor.data_generators import text_encoder
 from tensor2tensor.utils import decoding
