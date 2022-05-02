@@ -117,7 +117,7 @@ import note_seq
 tf.disable_v2_behavior()
 SF2_PATH = 'Yamaha-C5-Salamander-JNv5.1.sf2'
 SAMPLE_RATE = 16000
-midi_file='moonlight_sonata.mid'
+midi_file='C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer\moonlight_sonata.mid'
 # Upload a MIDI file and convert to NoteSequence.
 def upload_midi():
   data = list(midi_file.values())
