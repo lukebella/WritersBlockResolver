@@ -136,7 +136,7 @@ def decode(ids, encoder):
 
 model_name = 'transformer'
 hparams_set = 'transformer_tpu'
-ckpt_path = 'gs://magentadata/models/music_transformer/checkpoints/unconditional_model_16.ckpt'
+ckpt_path = 'C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/unconditional_model_16.ckpt'
 
 class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
   @property
