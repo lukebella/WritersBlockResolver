@@ -103,8 +103,9 @@ note_seq.plot_sequence(sequence_prediction)
 
 #============================================================================================================================
 
-
-from tensor2tensor import models
+import gym_patch
+with gym_patch.patch_register_gym_env():
+  from tensor2tensor import models
 from tensor2tensor import problems
 from tensor2tensor.data_generators import text_encoder
 from tensor2tensor.utils import decoding
