@@ -1,6 +1,14 @@
 .idea
 venv
+
+# Music-related files
 *.wav
+*.mid
+*.sf2
+
+# Common files
+*.zip
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
