@@ -24,8 +24,7 @@ print('Done!')
 
 SF2_PATH = 'file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/Yamaha-C5-Salamander-JNv5.1.sf2'
 SAMPLE_RATE = 16000
-midi_file='file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer\moonlight_sonata.mid'
-
+midi_file='file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/moonlight_sonata.mid'
 # Upload a MIDI file and convert to NoteSequence.
 def upload_midi():
   data = list(midi_file.values())
@@ -87,8 +86,7 @@ decode_length = 0
 
 # Start the Estimator, loading from the specified checkpoint.
 input_fn = decoding.make_input_fn_from_generator(input_generator())
-unconditional_samples = estimator.predict(
-    input_fn, checkpoint_path=ckpt_path)
+unconditional_samples = estimator.predict(input_fn, checkpoint_path=ckpt_path)
 
 # "Burn" one.
 _ = next(unconditional_samples)
