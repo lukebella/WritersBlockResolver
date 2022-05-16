@@ -4,9 +4,11 @@ import numpy as np
 import os
 import tensorflow.compat.v1 as tf
 
+#import transcription
+
 import gym_patch
 with gym_patch.patch_register_gym_env():
-  from tensor2tensor import models
+    from tensor2tensor import models
 from tensor2tensor import problems
 from tensor2tensor.data_generators import text_encoder
 from tensor2tensor.utils import decoding
@@ -24,7 +26,7 @@ print('Done!')
 
 SF2_PATH = 'file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/Yamaha-C5-Salamander-JNv5.1.sf2'
 SAMPLE_RATE = 16000
-midi_file='file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/moonlight_sonata.mid'
+midi_file = 'file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/moonlight_sonata.mid'
 # Upload a MIDI file and convert to NoteSequence.
 def upload_midi():
   data = list(midi_file.values())
@@ -42,8 +44,8 @@ def decode(ids, encoder):
 
 model_name = 'transformer'
 hparams_set = 'transformer_tpu'
-ckpt_path = 'file://C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/unconditional_model_16.ckpt'
-
+ckpt_path = './Transformer/unconditional_model_16.ckpt'
+#C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/unconditional_model_16.ckpt
 class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
   @property
   def add_eos_symbol(self):
