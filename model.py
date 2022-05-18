@@ -93,7 +93,7 @@ unconditional_samples = estimator.predict(input_fn, checkpoint_path=ckpt_path)
 # "Burn" one.
 _ = next(unconditional_samples)
 
-
+print("FINE")
 #============================================================================
 """targets = unconditional_encoders['targets'].encode_note_sequence(
     primer_ns)
