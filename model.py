@@ -93,32 +93,25 @@ unconditional_samples = estimator.predict(input_fn, checkpoint_path=ckpt_path)
 # "Burn" one.
 _ = next(unconditional_samples)
 
-print("FINE")
+
 #============================================================================
-"""targets = unconditional_encoders['targets'].encode_note_sequence(
-    primer_ns)
-
-# Remove the end token from the encoded primer.
-targets = targets[:-1]
-
-decode_length = max(0, 4096 - len(targets))
-if len(targets) >= 4096:
-  print('Primer has more events than maximum sequence length; nothing will be generated.')
+argets = []
+decode_length = 1024
 
 # Generate sample events.
 sample_ids = next(unconditional_samples)['outputs']
+print("Sequence generated")
 
 # Decode to NoteSequence.
 midi_filename = decode(
     sample_ids,
     encoder=unconditional_encoders['targets'])
-ns = note_seq.midi_file_to_note_sequence(midi_filename)
-
-# Append continuation to primer.
-continuation_ns = note_seq.concatenate_sequences([primer_ns, ns])
+unconditional_ns = note_seq.midi_file_to_note_sequence(midi_filename)
 
 # Play and plot.
 note_seq.play_sequence(
-    continuation_ns,
+    unconditional_ns,
     synth=note_seq.fluidsynth, sample_rate=SAMPLE_RATE, sf2_path=SF2_PATH)
-note_seq.plot_sequence(continuation_ns)"""
+note_seq.plot_sequence(unconditional_ns)
+
+print("FINE")
