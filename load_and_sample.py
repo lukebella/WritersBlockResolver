@@ -20,6 +20,9 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
 
 class Model():
 
+    targets = []
+    decode_length = 0
+
     def load(self, ckpt_path):
 
         #path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
@@ -46,11 +49,9 @@ class Model():
             model_name, hparams, run_config,
             decode_hparams=decode_hparams)
 
-        targets = []
-        decode_length = 0
 
         # Start the Estimator, loading from the specified checkpoint.
-        input_fn = decoding.make_input_fn_from_generator(input_generator(targets,decode_length))
+        input_fn = decoding.make_input_fn_from_generator(self.input_generator(self.targets,self.decode_length))
         unconditional_samples = estimator.predict(input_fn, checkpoint_path=ckpt_path)
 
         # "Burn" one.
