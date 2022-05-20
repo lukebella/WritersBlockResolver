@@ -85,8 +85,3 @@ class Model():
             encoder=self.unconditional_encoders['targets'])
         unconditional_ns = note_seq.midi_file_to_note_sequence(midi_filename)
 
-        # Play and plot.
-        note_seq.play_sequence(
-            unconditional_ns,
-            synth=note_seq.fluidsynth, sample_rate=SAMPLE_RATE, sf2_path=SF2_PATH)
-        note_seq.plot_sequence(unconditional_ns)
