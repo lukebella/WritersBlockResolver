@@ -45,7 +45,7 @@ def decode(ids, encoder):
 model_name = 'transformer'
 hparams_set = 'transformer_tpu'
 ckpt_path = './Transformer/unconditional_model_16.ckpt'
-#C:/Users/lenovo/Tesi/magenta/magenta/models/Transformer/unconditional_model_16.ckpt
+#C:/Users/lenovo/Tesi/prova/models/Transformer/unconditional_model_16.ckpt
 class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
   @property
   def add_eos_symbol(self):
@@ -95,7 +95,7 @@ _ = next(unconditional_samples)
 
 
 #============================================================================
-argets = []
+targets = []
 decode_length = 1024
 
 # Generate sample events.

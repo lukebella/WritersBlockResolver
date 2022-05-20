@@ -26,9 +26,10 @@ class Model():
     unconditional_encoders={}
     ckpt_path=""
 
-    def load(self, ckpt_path):
+    def load(self,ckpt_path):
 
         #path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
+        self.ckpt_path= ckpt_path
         model_name = 'transformer'
         hparams_set = 'transformer_tpu'
 
@@ -55,7 +56,7 @@ class Model():
 
         # Start the Estimator, loading from the specified checkpoint.
         input_fn = decoding.make_input_fn_from_generator(self.input_generator())
-        unconditional_samples = estimator.predict(input_fn, checkpoint_path=ckpt_path)
+        unconditional_samples = estimator.predict(input_fn, checkpoint_path=self.ckpt_path)
 
         # "Burn" one.
         _ = next(unconditional_samples)
@@ -78,15 +79,17 @@ class Model():
 
 
     def sample(self, ckpt_path):
-        sample_ids = next(self.load())['outputs']
+        sample_ids = next(self.load(ckpt_path))['outputs']
         print("Sequence generated")
 
         # Decode to NoteSequence.
-        return self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
+        midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
+        return midi_filename
 
 
-if __name__== '__main__':
-    Model.sample(ckpt_path="./Transformer/unconditional_model_16.ckpt")
+if __name__ == '__main__':
+    model = Model()
+    model.sample(ckpt_path="./Transformer/unconditional_model_16.ckpt")
     print("fine")
 
 
