@@ -18,7 +18,6 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
     return True
 
 
-
 class Model():
 
     targets = []
@@ -29,7 +28,7 @@ class Model():
     def load(self,ckpt_path):
 
         #path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
-        self.ckpt_path= ckpt_path
+        self.ckpt_path = ckpt_path
         model_name = 'transformer'
         hparams_set = 'transformer_tpu'
 
@@ -67,7 +66,7 @@ class Model():
     def input_generator(self):
         while True:
             yield {
-                'targets': np.array([self.targets], dtype=np.int32),
+                'targets': np.array([self.targets], dtype=np.int32),   #problem(?)
                 'decode_length': np.array(self.decode_length, dtype=np.int32)
             }
 
@@ -79,7 +78,10 @@ class Model():
 
 
     def sample(self, ckpt_path):
+        self.targets = []
+        self.decode_length = 1024
         sample_ids = next(self.load(ckpt_path))['outputs']
+        #print(sample_ids)
         print("Sequence generated")
 
         # Decode to NoteSequence.
@@ -89,8 +91,8 @@ class Model():
 
 if __name__ == '__main__':
     model = Model()
-    model.sample(ckpt_path="./Transformer/unconditional_model_16.ckpt")
-    print("fine")
+    midi_path = model.sample(ckpt_path="./Transformer/unconditional_model_16.ckpt")
+    print("MIDI Path: ", midi_path)
 
 
 
