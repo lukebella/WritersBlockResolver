@@ -10,6 +10,7 @@ from tensor2tensor.utils import trainer_lib
 from magenta.models.score2perf import score2perf
 import note_seq
 
+tf.disable_v2_behavior()
 
 class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
   @property
@@ -22,7 +23,8 @@ class Model():
 
     targets = []
     decode_length = 0
-    unconditional_encoders=()
+    unconditional_encoders={}
+    ckpt_path=""
 
     def load(self, ckpt_path):
 
@@ -76,12 +78,16 @@ class Model():
 
 
     def sample(self, ckpt_path):
-        sample_ids = next(self.load(ckpt_path))['outputs']
+        sample_ids = next(self.load())['outputs']
         print("Sequence generated")
 
         # Decode to NoteSequence.
-        midi_filename = self.decode(
-            sample_ids,
-            encoder=self.unconditional_encoders['targets'])
-        unconditional_ns = note_seq.midi_file_to_note_sequence(midi_filename)
+        return self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
+
+
+if __name__== '__main__':
+    Model.sample(ckpt_path="./Transformer/unconditional_model_16.ckpt")
+    print("fine")
+
+
 
