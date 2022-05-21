@@ -80,10 +80,10 @@ class Model():
         return encoder.decode(ids)
 
 
-    def sample(self, ckpt_path):
+    def sample(self):
         self.targets = []
         self.decode_length = 1024
-        sample_ids = next(self.load(ckpt_path))['outputs']
+        sample_ids = next(self.load(self.ckpt_path))['outputs']
         #print(sample_ids)
         print("Sequence generated")
 
@@ -93,8 +93,8 @@ class Model():
 
 
 if __name__ == '__main__':
-    model = Model()
-    midi_path = model.sample(ckpt_path="./Transformer/unconditional_model_16.ckpt")
+    model = Model("./Transformer/unconditional_model_16.ckpt")
+    midi_path = model.sample()
     print("MIDI Path: ", midi_path)
 
 
