@@ -102,6 +102,7 @@ decode_length = 1024
 sample_ids = next(unconditional_samples)['outputs']
 print("Sequence generated")
 
+encoder=unconditional_encoders['targets']
 # Decode to NoteSequence.
 midi_filename = decode(
     sample_ids,

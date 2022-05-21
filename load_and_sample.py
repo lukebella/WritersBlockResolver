@@ -18,28 +18,31 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
     return True
 
 
+#path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
+
 class Model():
 
     targets = []
     decode_length = 0
-    unconditional_encoders={}
-    ckpt_path=""
+
+    def __init__(self, ckpt_path):
+        self.ckpt_path = ckpt_path
+        self.model_name = 'transformer'
+        self.hparams_set = 'transformer_tpu'
+
+        self.problem = PianoPerformanceLanguageModelProblem()
+        self.unconditional_encoders = self.problem.get_feature_encoders()
+
+        self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
 
     def load(self,ckpt_path):
 
-        #path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
-        self.ckpt_path = ckpt_path
-        model_name = 'transformer'
-        hparams_set = 'transformer_tpu'
-
-        problem = PianoPerformanceLanguageModelProblem()
-        self.unconditional_encoders = problem.get_feature_encoders()
+        self.__init__(ckpt_path)
 
         #define and set hparams
-        hparams = trainer_lib.create_hparams(hparams_set=hparams_set)
-        trainer_lib.add_problem_hparams(hparams, problem)
-        hparams.num_hidden_layers = 16
-        hparams.sampling_method = 'random'
+        trainer_lib.add_problem_hparams(self.hparams, self.problem)
+        self.hparams.num_hidden_layers = 16
+        self.hparams.sampling_method = 'random'
 
 
         decode_hparams = decoding.decode_hparams()
@@ -47,9 +50,9 @@ class Model():
         decode_hparams.beam_size = 1
 
         # Create Estimator.
-        run_config = trainer_lib.create_run_config(hparams)
+        run_config = trainer_lib.create_run_config(self.hparams)
         estimator = trainer_lib.create_estimator(
-            model_name, hparams, run_config,
+            self.model_name, self.hparams, run_config,
             decode_hparams=decode_hparams)
 
 
@@ -66,8 +69,8 @@ class Model():
     def input_generator(self):
         while True:
             yield {
-                'targets': np.array([self.targets], dtype=np.int32),   #problem(?)
-                'decode_length': np.array(self.decode_length, dtype=np.int32)
+                'targets': np.array([Model.targets], dtype=np.int32),   #problem(?)
+                'decode_length': np.array(Model.decode_length, dtype=np.int32)
             }
 
     def decode(ids, encoder):
