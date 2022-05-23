@@ -1,6 +1,8 @@
 import numpy as np
 import tensorflow.compat.v1 as tf
 import gym_patch
+import os
+import shutil
 with gym_patch.patch_register_gym_env():
     from tensor2tensor import models
 from tensor2tensor import problems
@@ -91,11 +93,17 @@ class Model:
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
         return midi_filename
 
+    def move_dir(self, midi_filename):
+        dest = os.getcwd()+"\MIDI_file.mid"
+        shutil.move(midi_filename, dest)
+
+
 
 if __name__ == '__main__':
     model = Model("./Transformer/unconditional_model_16.ckpt")
     midi_path = model.sample()
     print("MIDI Path: ", midi_path)
+    model.move_dir(midi_path)
 
 
 
