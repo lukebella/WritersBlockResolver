@@ -20,8 +20,6 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
     return True
 
 
-#path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
-
 class Model:
 
     targets = []
@@ -93,17 +91,17 @@ class Model:
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
         return midi_filename
 
-    def move_dir(self, midi_filename):
-        dest = os.getcwd()+"\MIDI_file.mid"
-        shutil.move(midi_filename, dest)
 
+def move_dir(midi_filename):
+    dest = os.getcwd()+r"/MIDI_file.mid"
+    shutil.move(midi_filename, dest)
 
 
 if __name__ == '__main__':
     model = Model("./Transformer/unconditional_model_16.ckpt")
     midi_path = model.sample()
     print("MIDI Path: ", midi_path)
-    model.move_dir(midi_path)
+    move_dir(midi_path)
 
 
 
