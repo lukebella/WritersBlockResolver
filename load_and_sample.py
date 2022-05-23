@@ -20,7 +20,7 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
 
 #path for model: ckpt_path = './Transformer/unconditional_model_16.ckpt'
 
-class Model():
+class Model:
 
     targets = []
     decode_length = 0
@@ -73,7 +73,7 @@ class Model():
                 'decode_length': np.array(Model.decode_length, dtype=np.int32)
             }
 
-    def decode(ids, encoder):
+    def decode(self, ids, encoder):
         ids = list(ids)
         if text_encoder.EOS_ID in ids:
             ids = ids[:ids.index(text_encoder.EOS_ID)]
