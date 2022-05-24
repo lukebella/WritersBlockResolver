@@ -92,16 +92,15 @@ class Model:
         return midi_filename
 
 
-def move_dir(midi_filename):
-    dest = os.getcwd()+r"/MIDI_file.mid"
-    shutil.move(midi_filename, dest)
+def copy_dir(midi_filename):
+    dest = os.path.join(os.getcwd()+r"/MIDI_file.mid")
+    shutil.copy(midi_filename, dest)
 
 
 if __name__ == '__main__':
     model = Model("./Transformer/unconditional_model_16.ckpt")
     midi_path = model.sample()
-    print("MIDI Path: ", midi_path)
-    move_dir(midi_path)
+    copy_dir(midi_path)
 
 
 
