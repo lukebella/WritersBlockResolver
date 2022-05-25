@@ -3,6 +3,9 @@ import tensorflow.compat.v1 as tf
 import gym_patch
 import os
 import shutil
+
+import cherrypy
+
 with gym_patch.patch_register_gym_env():
     from tensor2tensor import models
 from tensor2tensor import problems
@@ -20,11 +23,23 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
     return True
 
 
-class Model:
+class Model(object):
 
     targets = []
     decode_length = 0
 
+    """ @cherrypy.expose
+    def index(self):
+        return <html>
+                  <head></head>
+                  <body>
+                    <form method="get" action="sample">
+                      <button type="submit">Generate MIDI sequence</button>
+                    </form>
+                  </body>
+                </html>"""
+
+    @cherrypy.expose
     def __init__(self, ckpt_path):
         self.ckpt_path = ckpt_path
         self.model_name = 'transformer'
@@ -35,6 +50,7 @@ class Model:
 
         self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
 
+    @cherrypy.expose
     def load(self,ckpt_path):
 
         self.__init__(ckpt_path)
@@ -65,7 +81,7 @@ class Model:
 
         return unconditional_samples
 
-
+    @cherrypy.expose
     def input_generator(self):
         while True:
             yield {
@@ -73,6 +89,7 @@ class Model:
                 'decode_length': np.array(Model.decode_length, dtype=np.int32)
             }
 
+    @cherrypy.expose
     def decode(self, ids, encoder):
         ids = list(ids)
         if text_encoder.EOS_ID in ids:
@@ -80,16 +97,21 @@ class Model:
         return encoder.decode(ids)
 
 
+    @cherrypy.expose
     def sample(self):
         self.targets = []
         self.decode_length = 1024
         sample_ids = next(self.load(self.ckpt_path))['outputs']
-        #print(sample_ids)
+       # cherrypy.session['seq'] = str(sample_ids)
+        print(sample_ids)
         print("Sequence generated")
-
         # Decode to NoteSequence.
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
-        return midi_filename
+        return "Sequenza: ",str(sample_ids), " Midi Path: ",midi_filename
+
+        """@cherrypy.expose
+    def display(self):
+        return "Sequenza: ", cherrypy.session['seq'], " Midi Path: ",cherrypy.session['midi']"""
 
 
 def copy_dir(midi_filename):
@@ -98,6 +120,11 @@ def copy_dir(midi_filename):
 
 
 if __name__ == '__main__':
-    model = Model("./Transformer/unconditional_model_16.ckpt")
+    """model = Model("./Transformer/unconditional_model_16.ckpt")
     midi_path = model.sample()
-    copy_dir(midi_path)
+    copy_dir(midi_path)"""
+    cherrypy.quickstart(Model("C:/Users/lenovo/Tesi/prova/Transformer/unconditional_model_16.ckpt"))
+
+
+
+
