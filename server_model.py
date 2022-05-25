@@ -28,16 +28,6 @@ class Model(object):
     targets = []
     decode_length = 0
 
-    """ @cherrypy.expose
-    def index(self):
-        return <html>
-                  <head></head>
-                  <body>
-                    <form method="get" action="sample">
-                      <button type="submit">Generate MIDI sequence</button>
-                    </form>
-                  </body>
-                </html>"""
 
     @cherrypy.expose
     def __init__(self, ckpt_path):
@@ -107,7 +97,7 @@ class Model(object):
         print("Sequence generated")
         # Decode to NoteSequence.
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
-        return "Sequenza: ",str(sample_ids), " Midi Path: ",midi_filename
+        return "Sequenza: ",str(sample_ids), "<br><br> Midi Path: ",midi_filename
 
         """@cherrypy.expose
     def display(self):
