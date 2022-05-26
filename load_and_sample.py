@@ -22,11 +22,9 @@ class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
 
 class Model:
 
-    targets = []
-    decode_length = 0
-
-    def __init__(self, ckpt_path):
-        self.ckpt_path = ckpt_path
+    def __init__(self):
+        self.targets = []
+        self.decode_length = 0
         self.model_name = 'transformer'
         self.hparams_set = 'transformer_tpu'
 
@@ -34,10 +32,17 @@ class Model:
         self.unconditional_encoders = self.problem.get_feature_encoders()
 
         self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
+        self.unconditional_samples = None
 
     def load(self,ckpt_path):
 
-        self.__init__(ckpt_path)
+        self.model_name = 'transformer'
+        self.hparams_set = 'transformer_tpu'
+
+        self.problem = PianoPerformanceLanguageModelProblem()
+        self.unconditional_encoders = self.problem.get_feature_encoders()
+
+        self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
 
         #define and set hparams
         trainer_lib.add_problem_hparams(self.hparams, self.problem)
@@ -58,19 +63,20 @@ class Model:
 
         # Start the Estimator, loading from the specified checkpoint.
         input_fn = decoding.make_input_fn_from_generator(self.input_generator())
-        unconditional_samples = estimator.predict(input_fn, checkpoint_path=self.ckpt_path)
+        unconditional_samples = estimator.predict(input_fn, checkpoint_path=ckpt_path)
 
         # "Burn" one.
         _ = next(unconditional_samples)
 
-        return unconditional_samples
+        self.unconditional_samples = unconditional_samples
+        return self
 
 
     def input_generator(self):
         while True:
             yield {
-                'targets': np.array([Model.targets], dtype=np.int32),   #problem(?)
-                'decode_length': np.array(Model.decode_length, dtype=np.int32)
+                'targets': np.array([self.targets], dtype=np.int32),   #problem(?)
+                'decode_length': np.array(self.decode_length, dtype=np.int32)
             }
 
     def decode(self, ids, encoder):
@@ -83,8 +89,8 @@ class Model:
     def sample(self):
         self.targets = []
         self.decode_length = 1024
-        sample_ids = next(self.load(self.ckpt_path))['outputs']
-        #print(sample_ids)
+        sample_ids = next(self.unconditional_samples)['outputs']
+        print(sample_ids)
         print("Sequence generated")
 
         # Decode to NoteSequence.
@@ -93,11 +99,12 @@ class Model:
 
 
 def copy_dir(midi_filename):
-    dest = os.path.join(os.getcwd()+r"/MIDI_file.mid")
+    dest = os.path.join(os.getcwd(), "MIDI_file.mid")
     shutil.copy(midi_filename, dest)
 
 
 if __name__ == '__main__':
-    model = Model("./Transformer/unconditional_model_16.ckpt")
+    model = Model().load('./Transformer/unconditional_model_16.ckpt')
+
     midi_path = model.sample()
     copy_dir(midi_path)
