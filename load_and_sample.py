@@ -36,14 +36,6 @@ class Model:
 
     def load(self,ckpt_path):
 
-        self.model_name = 'transformer'
-        self.hparams_set = 'transformer_tpu'
-
-        self.problem = PianoPerformanceLanguageModelProblem()
-        self.unconditional_encoders = self.problem.get_feature_encoders()
-
-        self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
-
         #define and set hparams
         trainer_lib.add_problem_hparams(self.hparams, self.problem)
         self.hparams.num_hidden_layers = 16
@@ -87,7 +79,6 @@ class Model:
 
 
     def sample(self):
-        self.targets = []
         self.decode_length = 1024
         sample_ids = next(self.unconditional_samples)['outputs']
         print(sample_ids)
@@ -104,7 +95,7 @@ def copy_dir(midi_filename):
 
 
 if __name__ == '__main__':
-    model = Model().load('./Transformer/unconditional_model_16.ckpt')
+    model = Model().load('C:/Users/lenovo/Tesi/prova/Transformer/unconditional_model_16.ckpt')
 
     midi_path = model.sample()
     copy_dir(midi_path)
