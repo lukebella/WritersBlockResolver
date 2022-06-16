@@ -1,6 +1,6 @@
 from load_and_sample import Model
 import cherrypy
-import requests
+#import requests
 
 class ModelServer():
 
@@ -19,6 +19,7 @@ class ModelServer():
         #f = requests.get(url)
         # print(f.text)
         #rispondere in http con un file
+
 
 if __name__ == '__main__':
     cherrypy.quickstart(ModelServer())

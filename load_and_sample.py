@@ -89,13 +89,13 @@ class Model:
         return midi_filename
 
 
-def copy_dir(midi_filename):
-    dest = os.path.join(os.getcwd(), "MIDI_file.mid")
-    shutil.copy(midi_filename, dest)
+    def copy_dir(self, midi_filename):
+        dest = os.path.join(os.getcwd(), "MIDI_file.mid")
+        shutil.copy(midi_filename, dest)
 
 
 if __name__ == '__main__':
     model = Model().load('C:/Users/lenovo/Tesi/prova/Transformer/unconditional_model_16.ckpt')
 
     midi_path = model.sample()
-    copy_dir(midi_path)
+    model.copy_dir(midi_path)
