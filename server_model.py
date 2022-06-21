@@ -16,7 +16,8 @@ class ModelServer():
     @cherrypy.expose
     def sample(self):
         self.filename = self.model.sample()
-        serve_file(self.filename, "application/x-download", "attachment")
+        return serve_file(self.filename, "application/x-download", "attachment")
+
 
 
 if __name__ == '__main__':
