@@ -13,14 +13,10 @@ class ModelServer():
         self.model.load(ckpt_path)
         return
 
-
     @cherrypy.expose
     def sample(self):
         self.filename = self.model.sample()
         serve_file(self.filename, "application/x-download", "attachment")
-
-    #@cherrypy.expose
-    #def download(self):
 
 
 if __name__ == '__main__':
