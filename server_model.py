@@ -1,12 +1,11 @@
 from load_and_sample import Model
 import cherrypy
-#import requests
 
 class ModelServer():
 
     def __init__(self):
         self.model = Model()
-        self.url = 'http://127.0.0.1:8080'
+        self.filename = ""
 
     @cherrypy.expose
     def load(self, ckpt_path='C:/Users/lenovo/Tesi/prova/Transformer/unconditional_model_16.ckpt'):
@@ -15,10 +14,13 @@ class ModelServer():
 
     @cherrypy.expose
     def sample(self):
-        return self.model.sample()
-        #f = requests.get(url)
-        # print(f.text)
-        #rispondere in http con un file
+        self.filename = self.model.sample()
+        with open(self.filename, mode='rb') as file:  # b is important -> binary
+            fileContent = file.read()
+
+        return fileContent
+       # return self.filename
+
 
 
 if __name__ == '__main__':
