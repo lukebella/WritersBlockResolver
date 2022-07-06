@@ -9,7 +9,7 @@ class ModelServer():
         self.model = Model()
 
     @cherrypy.expose
-    def load(self, ckpt_path):   #'./Transformer/unconditional_model_16.ckpt'
+    def load(self, ckpt_path='./Transformer/unconditional_model_16.ckpt'): #ckpt_path):   './Transformer/unconditional_model_16.ckpt'
         self.model.load(ckpt_path)
         return
 
