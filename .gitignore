@@ -1,5 +1,25 @@
+JuceLibraryCode
+designPlugin.jpg
+Transformer
+google-cloud-sdk
+
+/cloud_env.bat
+
+*.drawio
+
+
+*.ico
+
+/uninstaller.exe
+/install_mode
+
+Builds
+
 .idea
 venv
+/server_model.py
+/main.py
+/trascription.py
 
 # Music-related files
 *.wav
@@ -169,3 +189,8 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+model_impl.py
+load_and_sample.py
+main.py
+transcription.py
+tut04.py
