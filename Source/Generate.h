@@ -14,16 +14,19 @@ public:
         if (newValue)
         {
             DBG(request.getUrl().getDomain());
-            auto response = request.execute();
+            auto response = request.execute("LOAD");
+            DBG("LOAD");
             //String var_dbg = static_cast<String>(request.getUrl());
             if (response.result == Result::ok())
             {
-                DBG("SAMPLE");
                 request.setUrl("http://127.0.0.1:8080/sample");
-                auto response = request.execute();
-                DBG("SHUTDOWN");
+                auto response = request.execute("SAMPLE");
+                DBG("SAMPLE");
+               
+               
                 request.setUrl("http://127.0.0.1:8080/shutdown");
-                response = request.execute();
+                response = request.execute("SHUTDOWN");
+                DBG("SHUTDOWN");
             }
 
         }

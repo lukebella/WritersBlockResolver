@@ -1,9 +1,11 @@
 
 #pragma once
 
+//#include "PluginEditor.h"
+
 #include <JuceHeader.h>
 #include "Generate.h"
-#include "Explore.h"
+//#include "Explore.h"
 
 //==============================================================================
 /**
@@ -51,7 +53,7 @@ private:
     AudioProcessorValueTreeState parameters;
 
     Generate generate;
-    Explore explorer;
+    //Explore explorer;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WritersBlockResolverAudioProcessor)
 };

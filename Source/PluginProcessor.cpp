@@ -1,10 +1,6 @@
 
 #include "PluginProcessor.h"
-
-#define NAME_REQUEST "HTTPRequest"
-#define DEFAULT_ACTIVE 0
-#define NAME_EXPLORE "FindTranformer"
-
+#include "Parameters.h"
 //==============================================================================
 WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor() :
     parameters(*this, nullptr, "WBR_parameters", {
@@ -95,7 +91,9 @@ bool WritersBlockResolverAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* WritersBlockResolverAudioProcessor::createEditor()
 {
+    //return new WritersBlockResolverAudioEditor(*this, parameters);
     return nullptr;
+
 }
 
 //==============================================================================
@@ -121,8 +119,8 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
    if (paramID == NAME_REQUEST)
       generate.process(newValue);
 
-   if (paramID == NAME_EXPLORE)
-       explorer.findTransformer();
+   /*if (paramID == NAME_EXPLORE)
+       explorer.findTransformer();*/
 
     
 }

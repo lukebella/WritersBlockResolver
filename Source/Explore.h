@@ -14,7 +14,7 @@ public:
     {
         FileChooser explorer("Select Module for Generate a MIDI sequence", File::getSpecialLocation(File::userDesktopDirectory), "*.ckpt");
 
-        if (explorer.browseForFileToOpen())
+        /*if (explorer.browseForFileToOpen())
         {
             File transformer;
 
@@ -23,7 +23,7 @@ public:
             //read the file
             AudioFormatReader* reader = formatManager.createReaderFor(transformer);
 
-        }
+        }*/
     }
 
 

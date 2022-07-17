@@ -21,7 +21,7 @@ public:
     } response;
 
 
-    Request::Response execute()
+    Request::Response execute(const String operation)
     {
         auto urlRequest = url.getChildURL(endpoint);
         bool hasFields = (fields.getProperties().size() > 0);
@@ -35,13 +35,33 @@ public:
 
         std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
         
-        DBG("REQUEST");
+
+        //DBG("REQUEST");
         
         response.result = checkInputStream(input);
         if (response.result.failed()) return response;
 
+        
+        if (operation.contains("SAMPLE"))
+        {
+            DBG("init sequence");
+            if (midiStreamFile.readFrom(*input))
+            {
+                file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver");
+
+                FileOutputStream out(file);
+                if (midiStreamFile.writeTo(out))
+                {
+
+                    DBG(file.getFullPathName());
+                }
+
+            }
+        }
+
         response.bodyAsString = input->readEntireStreamAsString();
         response.result = JSON::parse(response.bodyAsString, response.body);
+        
 
         return response;
     }
@@ -63,6 +83,10 @@ private:
     String endpoint;
     DynamicObject fields;
     String bodyAsString;
+
+    MidiFile midiStreamFile;
+    File file;
+    //std::unique_ptr<FileOutputStream> out;
 
     Result checkInputStream(std::unique_ptr<InputStream>& input)
     {
