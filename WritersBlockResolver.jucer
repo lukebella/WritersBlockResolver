@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="kdkAMZ" name="WritersBlockResolver" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="1" displaySplashScreen="1"
-              jucerFormatVersion="1" pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn">
+              jucerFormatVersion="1" pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn"
+              defines="JUCE_MODAL_LOOPS_PERMITTED = 1">
   <MAINGROUP id="Fvyryz" name="WritersBlockResolver">
     <GROUP id="{E88A1C42-E5BD-98A1-3FF0-66B5B5706726}" name="Source">
       <FILE id="xOtBER" name="Explore.h" compile="0" resource="0" file="Source/Explore.h"/>

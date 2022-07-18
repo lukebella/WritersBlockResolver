@@ -4,7 +4,7 @@
 #include <JuceHeader.h>
 
 class Request {
-
+    
 public:
     Request() {}
     ~Request() {}
@@ -21,8 +21,9 @@ public:
     } response;
 
 
-    Request::Response execute(const String operation)
+    Request::Response execute(const String& operation)
     {
+
         auto urlRequest = url.getChildURL(endpoint);
         bool hasFields = (fields.getProperties().size() > 0);
         if (hasFields)
@@ -32,6 +33,45 @@ public:
             fields.writeAsJSON(output, 0, false, 20);
             urlRequest = urlRequest.withPOSTData(output.toString());
         }
+        
+        DBG(operation);
+        String str = static_cast<String>(operation.compare("SAMPLE"));
+        DBG(str);
+
+        if (operation.compare("SAMPLE") == 0)
+        {
+            DBG("init sequence");
+            file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_unc_seq.mid");
+            file.getChildFile("midi_unc_seq.mid");
+           
+            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            file.deleteFile();
+            std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file);
+
+            if (downloadptr)
+            {
+                while (downloadptr->isFinished() == false)
+                {
+                    DBG("Downloading...\n");
+                    Thread::sleep(500);
+                }
+
+                if (!downloadptr->hadError())
+                {
+                    DBG("Downloaded ok\n");
+                }
+                else
+                    DBG("Download failed\n");
+            }
+            else
+            {
+                DBG("No download pointer");
+            }
+
+
+            return response;
+        }
+
 
         std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
         
@@ -42,22 +82,6 @@ public:
         if (response.result.failed()) return response;
 
         
-        if (operation.contains("SAMPLE"))
-        {
-            DBG("init sequence");
-            if (midiStreamFile.readFrom(*input))
-            {
-                file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver");
-
-                FileOutputStream out(file);
-                if (midiStreamFile.writeTo(out))
-                {
-
-                    DBG(file.getFullPathName());
-                }
-
-            }
-        }
 
         response.bodyAsString = input->readEntireStreamAsString();
         response.result = JSON::parse(response.bodyAsString, response.body);
@@ -76,17 +100,19 @@ public:
         return url;
     }
 
-private:
+protected:
     URL url;
+
+    
+
+
     StringPairArray headers;
     String verb;
     String endpoint;
     DynamicObject fields;
     String bodyAsString;
-
-    MidiFile midiStreamFile;
+    
     File file;
-    //std::unique_ptr<FileOutputStream> out;
 
     Result checkInputStream(std::unique_ptr<InputStream>& input)
     {
