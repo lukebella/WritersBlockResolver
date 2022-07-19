@@ -23,7 +23,7 @@ public:
 
     Request::Response execute(const String& operation)
     {
-
+        //system("python -m writers_block_resolver.server ./Transformer/unconditional_model_16.ckpt");
         auto urlRequest = url.getChildURL(endpoint);
         bool hasFields = (fields.getProperties().size() > 0);
         if (hasFields)
@@ -38,6 +38,7 @@ public:
         String str = static_cast<String>(operation.compare("SAMPLE"));
         DBG(str);
 
+        //SAMPLING
         if (operation.compare("SAMPLE") == 0)
         {
             DBG("init sequence");
@@ -81,7 +82,6 @@ public:
         response.result = checkInputStream(input);
         if (response.result.failed()) return response;
 
-        
 
         response.bodyAsString = input->readEntireStreamAsString();
         response.result = JSON::parse(response.bodyAsString, response.body);
@@ -103,9 +103,6 @@ public:
 protected:
     URL url;
 
-    
-
-
     StringPairArray headers;
     String verb;
     String endpoint;
@@ -116,7 +113,9 @@ protected:
 
     Result checkInputStream(std::unique_ptr<InputStream>& input)
     {
-        if (!input) return Result::fail("HTTP request failed");
+        if (!input) 
+            return Result::fail("HTTP request failed");
+        
         return Result::ok();
     }
 

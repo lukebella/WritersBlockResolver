@@ -70,6 +70,7 @@ void WritersBlockResolverAudioProcessor::changeProgramName(int index, const juce
 //==============================================================================
 void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+    //startServer(args);
     generate.initialize();
 }
 
@@ -124,6 +125,16 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
 
     
 }
+
+void WritersBlockResolverAudioProcessor::startServer(const ArgumentList& args)  //int argc, char* argv[]
+{
+    app.addDefaultCommand({ "python -m writers_block_resolver.server ./Transformer/unconditional_model_16.ckpt" });
+    app.findAndRunCommand(args);
+
+    DBG("Server is switched-on");
+
+}
+
 
 //==============================================================================
 // This creates new instances of the plugin..

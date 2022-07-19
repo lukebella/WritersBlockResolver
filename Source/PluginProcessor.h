@@ -46,11 +46,17 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+
+
 private:
 
     void parameterChanged(const String& paramID, float newValue) override;
 
+    void startServer(const ArgumentList& args);  //int argc, char* argv[]
+
     AudioProcessorValueTreeState parameters;
+
+    ConsoleApplication app;
 
     Generate generate;
     //Explore explorer;

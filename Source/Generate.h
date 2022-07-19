@@ -10,9 +10,11 @@ public:
     Generate() {}
     ~Generate() {}
 
+
     void process(float newValue) {
         if (newValue)
         {
+            
             DBG(request.getUrl().getDomain());
             auto response = request.execute("LOAD");
             //DBG("LOAD");
