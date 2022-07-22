@@ -3,7 +3,8 @@
 
 #include <JuceHeader.h>
 
-class Request {
+class Request 
+{
     
 public:
     Request() {}
@@ -23,7 +24,6 @@ public:
 
     Request::Response execute(const String& operation)
     {
-        //system("python -m writers_block_resolver.server ./Transformer/unconditional_model_16.ckpt");
         auto urlRequest = url.getChildURL(endpoint);
         bool hasFields = (fields.getProperties().size() > 0);
         if (hasFields)
@@ -34,12 +34,12 @@ public:
             urlRequest = urlRequest.withPOSTData(output.toString());
         }
         
-        DBG(operation);
+        /*DBG(operation);
         String str = static_cast<String>(operation.compare("SAMPLE"));
-        DBG(str);
+        DBG(str);*/
 
         //SAMPLING
-        if (operation.compare("SAMPLE") == 0)
+        if (operation.compare("SAMPLE")== 0) 
         {
             DBG("init sequence");
             file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_unc_seq.mid");
@@ -47,33 +47,28 @@ public:
            
             std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
             file.deleteFile();
-            std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file);
-
-            if (downloadptr)
-            {
-                while (downloadptr->isFinished() == false)
-                {
-                    DBG("Downloading...\n");
-                    Thread::sleep(500);
-                }
-
-                if (!downloadptr->hadError())
-                {
-                    DBG("Downloaded ok\n");
-                }
-                else
-                    DBG("Download failed\n");
-            }
-            else
-            {
-                DBG("No download pointer");
-            }
-
+            
+            manageDownload(file);
 
             return response;
         }
 
 
+        //CONTINUATION
+        if (operation.compare("CONTINUATION") == 0)
+        {
+            DBG("init continuation");
+            file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_cont_seq.mid");
+            file.getChildFile("midi_cont_seq.mid");
+
+            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            file.deleteFile();
+
+            manageDownload(file);
+
+            return response;
+        }
+        
         std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
         
 
@@ -100,7 +95,10 @@ public:
         return url;
     }
 
+    
+
 protected:
+    
     URL url;
 
     StringPairArray headers;
@@ -110,6 +108,30 @@ protected:
     String bodyAsString;
     
     File file;
+
+    void manageDownload(File file) {
+        std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file);
+
+        if (downloadptr)
+        {
+            while (downloadptr->isFinished() == false)
+            {
+                DBG("Downloading...\n");
+                Thread::sleep(500);
+            }
+
+            if (!downloadptr->hadError())
+            {
+                DBG("Downloaded ok\n");
+            }
+            else
+                DBG("Download failed\n");
+        }
+        else
+        {
+            DBG("No download pointer");
+        }
+    }
 
     Result checkInputStream(std::unique_ptr<InputStream>& input)
     {

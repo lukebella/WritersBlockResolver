@@ -2,6 +2,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "Request.h"
+#include "Parameters.h"
 
 class Generate {
 
@@ -11,31 +12,52 @@ public:
     ~Generate() {}
 
 
-    void process(float newValue) {
+    void processUnc(float newValue) {
+
         if (newValue)
         {
-            
-            DBG(request.getUrl().getDomain());
-            auto response = request.execute("LOAD");
+            if (!transLoaded)
+            {
+                DBG(request.getUrl().getDomain());
+                DBG("Starting LOAD");
+                response = request.execute("LOAD");
+                if (response.result == Result::ok())
+                    transLoaded = true;
+                //se modulo già caricato dirlo con un flag
+                // 
+            }
+            // 
+            // 
             //DBG("LOAD");
             //String var_dbg = static_cast<String>(request.getUrl());
+
+            //SAMPLING
             if (response.result == Result::ok())
             {
+
                 DBG("LOAD termined. Starting SAMPLE...");
                 request.setUrl("http://127.0.0.1:8080/sample");
-                auto response = request.execute("SAMPLE");
-                //DBG("SAMPLE");
-                
-                if (response.result == Result::ok()) {
+                response = request.execute("SAMPLE");
+                DBG("/SAMPLE");
+
+                /*/if (response.result == Result::ok()) {
                     DBG("SAMPLE termined. Starting SHUTDOWN...");
                     request.setUrl("http://127.0.0.1:8080/shutdown");
                     response = request.execute("SHUTDOWN");
                     //DBG("SHUTDOWN");
-                }
-                /*else
-                {
-                    nullRequest(request);
                 }*/
+                    /*else
+                    {
+                        nullRequest(request);
+                    }*/
+                
+
+                
+                    /*else
+                    {
+                        nullRequest(request);
+                    }*/
+                
             }
             else
             {
@@ -44,6 +66,48 @@ public:
 
         }
     }
+
+
+    void processCond(float newValue)
+    {
+        if (newValue)
+        {
+            if (!transLoaded)
+            {
+                DBG(request.getUrl().getDomain());
+                DBG("Starting LOAD");
+                response = request.execute("LOAD");
+                if (response.result == Result::ok())
+                    transLoaded = true;
+                //se modulo già caricato dirlo con un flag
+                // 
+            }
+
+            //CONTINUATION
+            if (response.result == Result::ok())
+            {
+                DBG("LOAD termined. Starting CONTINUATION...");
+                request.setUrl("http://127.0.0.1:8080/continuation");
+                response = request.execute("CONTINUATION");
+                DBG("SAMPLE");
+
+                if (response.result == Result::ok()) {
+                    DBG("CONTINUATION termined. Starting SHUTDOWN...");
+                    request.setUrl("http://127.0.0.1:8080/shutdown");
+                    response = request.execute("SHUTDOWN");
+                    transLoaded = false;
+
+                    //DBG("SHUTDOWN");
+                }
+            }
+            else
+            {
+                nullRequest(request);
+            }
+        }
+    }
+
+
 
     /*/void process(juce::MidiFile midiFile, int max_primer_seconds) {
         request.execute();
@@ -59,12 +123,16 @@ public:
         DBG("Richiesta non eseguita");
         request.setUrl("http://127.0.0.1:8080/shutdown");
         auto nullResponse = request.execute("SHUTDOWN");
+        transLoaded = false;
         DBG("SHUTDOWN");
     }
+
+
 private:
 
     Request request;
-     
+    Request::Response response;
+    bool transLoaded = false;
 
 };
 

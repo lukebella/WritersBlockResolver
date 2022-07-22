@@ -33,6 +33,7 @@ class Model:
 
         self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
         self.unconditional_samples = None
+        self.primer_ns = None
 
     def load(self,ckpt_path):
 
@@ -88,15 +89,84 @@ class Model:
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
         return midi_filename
 
+    def primingSequence(self):
+        """filenames = {
+            'C major arpeggio': '/content/c_major_arpeggio.mid',
+            'C major scale': '/content/c_major_scale.mid',
+            'Clair de Lune': '/content/clair_de_lune.mid',
+        }"""
+        primer = 'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
 
 
-def copy_dir(midi_filename):
+        self.primer_ns = note_seq.midi_file_to_note_sequence(primer)    #filenames[primer]
+
+        # Handle sustain pedal in the primer.
+        self.primer_ns = note_seq.apply_sustain_control_changes(self.primer_ns)
+
+        # Trim to desired number of seconds.
+        max_primer_seconds = 20  # @param {type:"slider", min:1, max:120}
+        if self.primer_ns.total_time > max_primer_seconds:
+            print('Primer is longer than %d seconds, truncating.' % max_primer_seconds)
+            primer_ns = note_seq.extract_subsequence(
+                self.primer_ns, 0, max_primer_seconds)
+
+        # Remove drums from primer if present.
+        if any(note.is_drum for note in self.primer_ns.notes):
+            print('Primer contains drums; they will be removed.')
+            notes = [note for note in self.primer_ns.notes if not note.is_drum]
+            del self.primer_ns.notes[:]
+            self.primer_ns.notes.extend(notes)
+
+        # Set primer instrument and program.
+        """for note in primer_ns.notes:
+            note.instrument = 1
+            note.program = 0
+
+        # Play and plot the primer.
+        note_seq.play_sequence(
+            primer_ns,
+            synth=note_seq.fluidsynth, sample_rate=SAMPLE_RATE, sf2_path=SF2_PATH)
+        note_seq.plot_sequence(primer_ns)"""
+
+    def continuation(self):
+        self.primingSequence()
+        self.targets = self.unconditional_encoders['targets'].encode_note_sequence(
+            self.primer_ns)
+
+        # Remove the end token from the encoded primer.
+        self.targets = self.targets[:-1]
+
+        decode_length = max(0, 4096 - len(self.targets))
+        if len(self.targets) >= 4096:
+            print('Primer has more events than maximum sequence length; nothing will be generated.')
+
+        # Generate sample events.
+        sample_ids = next(self.unconditional_samples)['outputs']
+
+        # Decode to NoteSequence.
+        midi_filename = self.decode(
+            sample_ids,
+            encoder=self.unconditional_encoders['targets'])
+        ns = note_seq.midi_file_to_note_sequence(midi_filename)
+
+        """
+        # Append continuation to primer.
+        continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
+        print(continuation_ns)"""
+        print("Continuation generated")
+        return midi_filename
+
+
+
+"""def copy_dir(midi_filename):
     dest = os.path.join(os.getcwd(), "MIDI_file.mid")
     shutil.copy(midi_filename, dest)
 
-
-"""if __name__ == '__main__':
+if __name__ == '__main__':
     model = Model().load('C:/Users/lenovo/Tesi/prova/Transformer/unconditional_model_16.ckpt')
 
-    midi_path = model.sample()
-    copy_dir(midi_path)"""
+    #midi_path = model.sample()
+    continuation_ns = model.continuation()
+
+
+    #copy_dir(midi_path)"""

@@ -22,6 +22,11 @@ class ModelServer():
         return serve_file(filename, "audio/midi", "attachment", "Unconditional Midi File")
 
     @cherrypy.expose
+    def continuation(self):
+        cont = self.model.continuation()
+        return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
+
+    @cherrypy.expose
     def shutdown(self):
         cherrypy.engine.exit()
 
