@@ -1,6 +1,7 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "Generate.h"
 
 class Explore : public FileDragAndDropTarget
 {
@@ -10,19 +11,20 @@ public:
     Explore() {}
     ~Explore() {}
 
-    void findTransformer()
+    void findMidi(float newValue)
     {
-        FileChooser explorer("Select Module for Generate a MIDI sequence", File::getSpecialLocation(File::userDesktopDirectory), "*.ckpt");
-
-        if (explorer.browseForFileToOpen())
+        if (newValue)
         {
-            File transformer;
+            FileChooser explorer("Select a MIDI file to continue", File::getSpecialLocation(File::userHomeDirectory), "*.mid");
 
-            transformer = explorer.getResult();
+            if (explorer.browseForFileToOpen())
+            {
+                File midifile(explorer.getResult());
+                generate.processCond(midifile);
+                //read the file
+                //AudioFormatReader* reader = formatManager.createReaderFor(transformer);
 
-            //read the file
-            AudioFormatReader* reader = formatManager.createReaderFor(transformer);
-
+            }
         }
     }
 
@@ -39,14 +41,14 @@ public:
         return false;
     }
     
-    /* for continuation(dragging from DAW to component)
+    //for continuation(dragging from DAW to component)
     void filesDropped(const StringArray& files, int x, int y) override
     {
         if (isInterestedInFileDrag(files))
         {
 
         }
-    }*/
+    }
 
 
     void seqDragAndDrop(const var& sourceDescription, Component* sourceComponent)
@@ -60,5 +62,6 @@ private:
     DragAndDropContainer recipient;
     std::unique_ptr<AudioFormatReaderSource> playSource;
     AudioTransportSource transport;
+    Generate generate;
 
 };

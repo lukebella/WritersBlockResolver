@@ -1,6 +1,6 @@
 //caricare il server con comandi da terminale
 //con GUI non parte la generazione(com'è possibile?)
-//riuscire a creare un componente in cui compaia la file http response e trascinarlo nella daw
+    //riuscire a creare un componente in cui compaia la file http response e trascinarlo nella daw
 
 
 
@@ -13,8 +13,10 @@
 //==============================================================================
 WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor() :
     parameters(*this, nullptr, "WBR_parameters", {
-        std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_ACTIVE),
-        std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_ACTIVE),
+        std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
+        std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
+        std::make_unique<AudioParameterBool>(NAME_SERVER, "Close Server", DEFAULT_ACTIVE),
+
 
         std::make_unique<AudioParameterBool>(NAME_EXPLORE, "Find your module", DEFAULT_ACTIVE),
         })
@@ -22,6 +24,8 @@ WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor() :
   
     parameters.addParameterListener(NAME_UNC_REQUEST, this);
     parameters.addParameterListener(NAME_COND_REQUEST, this);
+    parameters.addParameterListener(NAME_SERVER, this);
+
 
 }
 
@@ -133,7 +137,10 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
       generate.processUnc(newValue);
 
    if (paramID == NAME_COND_REQUEST)
-       generate.processCond(newValue);
+       explorer.findMidi(newValue);
+
+   if (paramID == NAME_SERVER)
+       generate.closeConn();
    /*if (paramID == NAME_EXPLORE)
        explorer.findTransformer();*/
 
