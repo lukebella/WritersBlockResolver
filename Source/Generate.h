@@ -71,7 +71,7 @@ public:
     }*/
 
     void initialize() {
-        request.setUrl("http://127.0.0.1:8080/load");
+        request.setUrl("http://127.0.0.1:8080");
         //?ckpt_path='C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/Transformer/unconditional_model_16.ckpt'
     }
 
@@ -86,7 +86,7 @@ public:
     {
         if (!transLoaded)
         {
-            initialize();
+            request.setUrl("http://127.0.0.1:8080/load");
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
             response = request.execute("LOAD");

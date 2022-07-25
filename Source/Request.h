@@ -1,6 +1,4 @@
-
 #pragma once
-
 #include <JuceHeader.h>
 
 class Request 
@@ -46,7 +44,12 @@ public:
 
             response.result = checkInputStream(input);
             if (response.result.failed()) return response;
-            else DBG("File Stored");
+            else
+            {
+                DBG("File Stored");
+                
+                return response;
+            }
         }
 
 
@@ -109,7 +112,14 @@ public:
 
     URL attachFile(URL& url,File& file)
     {
-        return url.withFileToUpload("Midi File to continue", file, "audio/midi");
+        MemoryBlock mb = MemoryBlock();
+
+        if (file.loadFileAsData(mb))
+        {
+            return url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
+            DBG("Uploading file");
+        }
+        //return url.withFileToUpload("Midi File to continue", file, "audio/midi");
     }
 
     URL attachtransPath(URL& url, const String& path)

@@ -96,7 +96,7 @@ class Model:
             'Clair de Lune': '/content/clair_de_lune.mid',
         }"""
         primer = midiFile
-        print("File: ", primer)
+        print(os.path.exists(midiFile))
         #'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
 
 
