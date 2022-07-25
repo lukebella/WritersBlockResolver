@@ -2,7 +2,7 @@ from writers_block_resolver.model import Model
 import cherrypy
 from cherrypy.lib.static import serve_file
 
-
+import os
 import sys
 
 class ModelServer():
@@ -10,7 +10,20 @@ class ModelServer():
     def __init__(self, ckpt_path):
         self.model = Model()
         self.ckpt_path = ckpt_path
-        self.midiToContinue = None
+
+
+    def initFile(self, myFile):
+        with open(myFile, 'r+b') as f:
+            return f.read()
+
+        # read the uploaded file
+
+    @cherrypy.expose
+    def store(self, myFile):
+        print(os.path.join(myFile, ""))
+        self.midiFileToContinue = self.initFile(myFile)
+
+
 
     @cherrypy.expose
     def load(self): #ckpt_path):   ='./Transformer/unconditional_model_16.ckpt'  C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/unconditional_model_16.ckpt
@@ -19,6 +32,7 @@ class ModelServer():
         print()
         return
 
+
     @cherrypy.expose
     def sample(self):
         filename = self.model.sample()
@@ -26,20 +40,16 @@ class ModelServer():
 
     @cherrypy.expose
     def continuation(self):
-        self.model.primingSequence(self.midiToContinue)
+        self.model.primingSequence(self.midiFileToContinue)
         cont = self.model.continuation()
         return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
+
+
 
     @cherrypy.expose
     def shutdown(self):
         cherrypy.engine.exit()
 
-
-    # read the uploaded file
-    @cherrypy.expose
-    def store(self, myFile):
-        with open(myFile, 'r+b') as f:
-            self.midiToContinue = {f.name: f.read()}
 
 
 if __name__ == '__main__':

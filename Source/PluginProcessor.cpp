@@ -87,7 +87,7 @@ void WritersBlockResolverAudioProcessor::changeProgramName(int index, const juce
 void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     //startServer(args);
-    generate.initialize();
+    //generate.initialize();
 }
 
 void WritersBlockResolverAudioProcessor::releaseResources()

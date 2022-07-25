@@ -42,14 +42,10 @@ public:
             DBG("Trying to send a file");
             std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
 
-            response.result = checkInputStream(input);
-            if (response.result.failed()) return response;
-            else
-            {
-                DBG("File Stored");
+            DBG("File Stored");
                 
-                return response;
-            }
+            return response;
+            
         }
 
 
@@ -110,14 +106,19 @@ public:
         return url;
     }
 
-    URL attachFile(URL& url,File& file)
+    void attachFile(URL& url,File& file)
     {
         MemoryBlock mb = MemoryBlock();
 
         if (file.loadFileAsData(mb))
         {
-            return url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
-            DBG("Uploading file");
+            url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
+            DBG("Uploading file ");
+            DBG(file.getFileName());
+        }
+        else
+        {
+            DBG("Error in copying file into the buffer");
         }
         //return url.withFileToUpload("Midi File to continue", file, "audio/midi");
     }
@@ -126,6 +127,7 @@ public:
     {
         return url.withParameter("ckpt_path", path);
     }
+
     
 
 protected:

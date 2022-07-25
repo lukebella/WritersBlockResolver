@@ -144,6 +144,7 @@ class Model:
         # Generate sample events.
         sample_ids = next(self.unconditional_samples)['outputs']
 
+        print(sample_ids)
         # Decode to NoteSequence.
         midi_filename = self.decode(
             sample_ids,
