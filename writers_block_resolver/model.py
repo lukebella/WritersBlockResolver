@@ -89,13 +89,15 @@ class Model:
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
         return midi_filename
 
-    def primingSequence(self):
+    def primingSequence(self, midiFile):
         """filenames = {
             'C major arpeggio': '/content/c_major_arpeggio.mid',
             'C major scale': '/content/c_major_scale.mid',
             'Clair de Lune': '/content/clair_de_lune.mid',
         }"""
-        primer = 'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
+        primer = midiFile
+        print("File: ", primer)
+        #'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
 
 
         self.primer_ns = note_seq.midi_file_to_note_sequence(primer)    #filenames[primer]
@@ -129,7 +131,6 @@ class Model:
         note_seq.plot_sequence(primer_ns)"""
 
     def continuation(self):
-        self.primingSequence()
         self.targets = self.unconditional_encoders['targets'].encode_note_sequence(
             self.primer_ns)
 

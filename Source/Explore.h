@@ -20,7 +20,7 @@ public:
             if (explorer.browseForFileToOpen())
             {
                 File midifile(explorer.getResult());
-                generate.processCond(midifile);
+                generate.continuation(midifile);
                 //read the file
                 //AudioFormatReader* reader = formatManager.createReaderFor(transformer);
 
@@ -60,8 +60,6 @@ private:
 
     AudioFormatManager formatManager;
     DragAndDropContainer recipient;
-    std::unique_ptr<AudioFormatReaderSource> playSource;
-    AudioTransportSource transport;
     Generate generate;
 
 };

@@ -35,9 +35,8 @@ public:
     }
 
 
-    void processCond(File& midiFile)
+    void processCond()
     {
-        openAndLoad();
 
         //CONTINUATION
         if (response.result == Result::ok())
@@ -59,7 +58,13 @@ public:
     }
 
 
+    void continuation(File& midiFile)
+    {
+        sendFile(midiFile);
+        openAndLoad();
+        processCond();
 
+    }
 
     /*/void process(juce::MidiFile midiFile, int max_primer_seconds) {
         request.execute();
@@ -81,6 +86,7 @@ public:
     {
         if (!transLoaded)
         {
+            initialize();
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
             response = request.execute("LOAD");
@@ -94,6 +100,8 @@ public:
             // 
         }
     }
+
+
     void closeConn()
     {
         request.setUrl("http://127.0.0.1:8080/shutdown");
@@ -102,6 +110,19 @@ public:
         DBG("SHUTDOWN");
     }
 
+    void sendFile(File& midiFile)
+    {
+        request.setUrl("http://127.0.0.1:8080/store");
+        request.attachFile(request.getUrl(), midiFile);
+        response = request.execute("STORE");
+        if (response.result == Result::ok())
+            DBG("File sent.");
+        else
+        {
+            nullRequest(response);
+        }
+
+    }
 
 private:
 

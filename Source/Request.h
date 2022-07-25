@@ -38,6 +38,18 @@ public:
         String str = static_cast<String>(operation.compare("SAMPLE"));
         DBG(str);*/
 
+
+        if (operation.compare("STORE") == 0)
+        {
+            DBG("Trying to send a file");
+            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+
+            response.result = checkInputStream(input);
+            if (response.result.failed()) return response;
+            else DBG("File Stored");
+        }
+
+
         //SAMPLING
         if (operation.compare("SAMPLE")== 0) 
         {
@@ -95,6 +107,15 @@ public:
         return url;
     }
 
+    URL attachFile(URL& url,File& file)
+    {
+        return url.withFileToUpload("Midi File to continue", file, "audio/midi");
+    }
+
+    URL attachtransPath(URL& url, const String& path)
+    {
+        return url.withParameter("ckpt_path", path);
+    }
     
 
 protected:
