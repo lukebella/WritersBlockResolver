@@ -95,6 +95,7 @@ class Model:
             'C major scale': '/content/c_major_scale.mid',
             'Clair de Lune': '/content/clair_de_lune.mid',
         }"""
+        print(os.path.join(midiFile, ""))
         primer = midiFile
         print(os.path.exists(midiFile))
         #'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
@@ -129,6 +130,8 @@ class Model:
             primer_ns,
             synth=note_seq.fluidsynth, sample_rate=SAMPLE_RATE, sf2_path=SF2_PATH)
         note_seq.plot_sequence(primer_ns)"""
+
+        return self
 
     def continuation(self):
         self.targets = self.unconditional_encoders['targets'].encode_note_sequence(

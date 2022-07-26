@@ -21,6 +21,7 @@ public:
             //SAMPLING
             if (response.result == Result::ok())
             {
+                transLoaded = true;
                 DBG("LOAD termined. Starting SAMPLE...");
                 request.setUrl("http://127.0.0.1:8080/sample");
                 response = request.execute("SAMPLE");
@@ -90,12 +91,6 @@ public:
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
             response = request.execute("LOAD");
-            if (response.result == Result::ok())
-                transLoaded = true;
-            else
-            {   
-                nullRequest(response);
-            }
             //se modulo già caricato dirlo con un flag
             // 
         }
@@ -114,6 +109,7 @@ public:
     {
         request.setUrl("http://127.0.0.1:8080/store");
         request.attachFile(request.getUrl(), midiFile);
+        DBG(midiFile.getFileName());
         response = request.execute("STORE");
         if (response.result == Result::ok())
             DBG("File sent.");

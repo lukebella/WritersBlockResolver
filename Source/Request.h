@@ -91,7 +91,6 @@ public:
 
         response.bodyAsString = input->readEntireStreamAsString();
         response.result = JSON::parse(response.bodyAsString, response.body);
-        
 
         return response;
     }
@@ -113,8 +112,12 @@ public:
         if (file.loadFileAsData(mb))
         {
             url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
+            DBG(mb.getSize());
             DBG("Uploading file ");
             DBG(file.getFileName());
+            DBG(getUrl().getDomain());
+            DBG(getUrl().getParameterNames()[0]);
+
         }
         else
         {
@@ -133,7 +136,6 @@ public:
 protected:
     
     URL url;
-
     StringPairArray headers;
     String verb;
     String endpoint;

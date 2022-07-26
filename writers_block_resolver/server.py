@@ -10,7 +10,7 @@ class ModelServer():
     def __init__(self, ckpt_path):
         self.model = Model()
         self.ckpt_path = ckpt_path
-
+        self.midiFileToContinue = ""
 
     def initFile(self, myFile):
         with open(myFile, 'r+b') as f:
@@ -38,11 +38,13 @@ class ModelServer():
         filename = self.model.sample()
         return serve_file(filename, "audio/midi", "attachment", "Unconditional Midi File")
 
+
     @cherrypy.expose
     def continuation(self):
-        self.model.primingSequence(self.midiFileToContinue)
-        cont = self.model.continuation()
-        return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
+        if os.path.exists(self.midiFileToContinue):
+            self.model.primingSequence(self.midiFileToContinue)
+            cont = self.model.continuation()
+            return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
 
 
 
