@@ -32,15 +32,13 @@ public:
             urlRequest = urlRequest.withPOSTData(output.toString());
         }
         
-        /*DBG(operation);
-        String str = static_cast<String>(operation.compare("SAMPLE"));
-        DBG(str);*/
-
 
         if (operation.compare("STORE") == 0)
         {
             DBG("Trying to send a file");
             std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(input);
+            if (response.result.failed()) return response;
 
             DBG("File Stored");
                 
@@ -57,6 +55,14 @@ public:
             file.getChildFile("midi_unc_seq.mid");
            
             std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(input);
+            
+            if (response.result.failed())
+            {
+                DBG(response.result.getErrorMessage());
+                return response;
+            }
+
             file.deleteFile();
             
             manageDownload(file);
@@ -73,6 +79,9 @@ public:
             file.getChildFile("midi_cont_seq.mid");
 
             std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(input);
+            if (response.result.failed()) return response;
+
             file.deleteFile();
 
             manageDownload(file);
@@ -144,7 +153,7 @@ protected:
     
     File file;
 
-    void manageDownload(File file) {
+    void manageDownload(File& file) {
         std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file);
 
         if (downloadptr)
@@ -170,9 +179,10 @@ protected:
 
     Result checkInputStream(std::unique_ptr<InputStream>& input)
     {
-        if (!input) 
+        if (!input)
+        {
             return Result::fail("HTTP request failed");
-        
+        }
         return Result::ok();
     }
 

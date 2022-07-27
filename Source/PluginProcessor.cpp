@@ -135,7 +135,7 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
    
 
    if (paramID == NAME_UNC_REQUEST) 
-      generate.processUnc(newValue);
+      generate.unconditional(newValue);
 
    if (paramID == NAME_COND_REQUEST)
        explorer.findMidi(newValue);

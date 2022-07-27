@@ -12,27 +12,41 @@ public:
     ~Generate() {}
 
 
-    void processUnc(float newValue) {
-
+    void unconditional(float newValue)
+    {
         if (newValue)
         {
             openAndLoad();
-            
+            processUnc();
+        }
+    }
+
+
+    void processUnc() {            
             //SAMPLING
             if (response.result == Result::ok())
             {
                 transLoaded = true;
-                DBG("LOAD termined. Starting SAMPLE...");
-                request.setUrl("http://127.0.0.1:8080/sample");
-                response = request.execute("SAMPLE");
-                DBG("/SAMPLE");
+                sample();
             }
             else
             {
                 nullRequest(response);
             }
+        
+    }
 
+    void sample()
+    {
+        DBG("LOAD termined. Starting SAMPLE...");
+        request.setUrl("http://127.0.0.1:8080/sample");
+        response = request.execute("SAMPLE");
+        DBG("/SAMPLE");
+        if (response.result.failed())
+        {
+            nullRequest(response);
         }
+        
     }
 
 
