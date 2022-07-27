@@ -15,7 +15,7 @@ WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor() :
     parameters(*this, nullptr, "WBR_parameters", {
         std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
-        std::make_unique<AudioParameterBool>(NAME_SERVER, "Close Server", DEFAULT_ACTIVE),
+        std::make_unique<AudioParameterBool>(NAME_SERVER, "Server", DEFAULT_ACTIVE),
 
 
         std::make_unique<AudioParameterBool>(NAME_EXPLORE, "Find your module", DEFAULT_ACTIVE),

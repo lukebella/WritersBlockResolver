@@ -120,12 +120,12 @@ public:
 
         if (file.loadFileAsData(mb))
         {
-            url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
-            DBG(mb.getSize());
+            url = url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
+            DBG(String(mb.getSize()));
             DBG("Uploading file ");
             DBG(file.getFileName());
             DBG(getUrl().getDomain());
-            DBG(getUrl().getParameterNames()[0]);
+            DBG(getUrl().getParameterNames()[1]);
 
         }
         else

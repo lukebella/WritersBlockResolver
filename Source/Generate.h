@@ -21,6 +21,14 @@ public:
         }
     }
 
+    void continuation(File& midiFile)
+    {
+        sendFile(midiFile);
+        openAndLoad();
+        processCond();
+
+    }
+
 
     void processUnc() {            
             //SAMPLING
@@ -73,13 +81,6 @@ public:
     }
 
 
-    void continuation(File& midiFile)
-    {
-        sendFile(midiFile);
-        openAndLoad();
-        processCond();
-
-    }
 
     /*/void process(juce::MidiFile midiFile, int max_primer_seconds) {
         request.execute();
