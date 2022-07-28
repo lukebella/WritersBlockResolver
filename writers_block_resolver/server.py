@@ -18,6 +18,8 @@ class ModelServer():
     @cherrypy.expose
     def store(self, myFile):
         self.midiFileToContinue = self.model.store(myFile)
+        print(os.path.join(self.midiFileToContinue, ""))
+
 
 
     @cherrypy.expose

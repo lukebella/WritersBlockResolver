@@ -1,9 +1,9 @@
 #pragma once
 #include <JuceHeader.h>
 
-class Request 
+class Request
 {
-    
+
 public:
     Request() {}
     ~Request() {}
@@ -31,31 +31,40 @@ public:
             fields.writeAsJSON(output, 0, false, 20);
             urlRequest = urlRequest.withPOSTData(output.toString());
         }
-        
+
 
         if (operation.compare("STORE") == 0)
         {
             DBG("Trying to send a file");
-            response = makeResponse(urlRequest, hasFields);
+            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(input);
+            if (response.result.failed()) return response;
 
             DBG("File Stored");
-                
+
             return response;
-            
+
         }
 
 
         //SAMPLING
-        if (operation.compare("SAMPLE")== 0) 
+        if (operation.compare("SAMPLE") == 0)
         {
             DBG("init sequence");
             file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_unc_seq.mid");
             file.getChildFile("midi_unc_seq.mid");
-           
-            response = makeResponse(urlRequest, hasFields);
+
+            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(input);
+
+            if (response.result.failed())
+            {
+                DBG(response.result.getErrorMessage());
+                return response;
+            }
 
             file.deleteFile();
-            
+
             manageDownload(file);
 
             return response;
@@ -69,7 +78,9 @@ public:
             file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_cont_seq.mid");
             file.getChildFile("midi_cont_seq.mid");
 
-            response = makeResponse(urlRequest, hasFields);
+            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(input);
+            if (response.result.failed()) return response;
 
             file.deleteFile();
 
@@ -77,9 +88,20 @@ public:
 
             return response;
         }
-        
-        return makeResponse(urlRequest, hasFields);
-        
+
+        std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+
+
+        //DBG("REQUEST");
+
+        response.result = checkInputStream(input);
+        if (response.result.failed()) return response;
+
+
+        response.bodyAsString = input->readEntireStreamAsString();
+        response.result = JSON::parse(response.bodyAsString, response.body);
+
+        return response;
     }
 
 
@@ -92,28 +114,13 @@ public:
         return url;
     }
 
-    Request::Response makeResponse(URL& urlRequest, bool& hasFields)
-    {
-        std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-        response.result = checkInputStream(input);
-
-        if (response.result.failed())
-        {
-            DBG(response.result.getErrorMessage());
-            return response;
-        }
-        response.bodyAsString = input->readEntireStreamAsString();
-        response.result = JSON::parse(response.bodyAsString, response.body);
-    }
-
-
-    void attachFile(URL& url,File& file)
+    void attachFile(URL& url, File& file)
     {
         MemoryBlock mb = MemoryBlock();
 
         if (file.loadFileAsData(mb))
         {
-            url = url.withDataToUpload("Midi File to continue",file.getFileName(), mb, "audio/midi");
+            url = url.withDataToUpload("Midi File to continue", file.getFileName(), mb, "audio/midi");
             DBG(String(mb.getSize()));
             DBG("Uploading file ");
             DBG(file.getFileName());
@@ -133,17 +140,17 @@ public:
         return url.withParameter("ckpt_path", path);
     }
 
-    
+
 
 protected:
-    
+
     URL url;
     StringPairArray headers;
     String verb;
     String endpoint;
     DynamicObject fields;
     String bodyAsString;
-    
+
     File file;
 
     void manageDownload(File& file) {

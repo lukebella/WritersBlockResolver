@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 #include <JuceHeader.h>
 #include "Request.h"
@@ -30,18 +30,18 @@ public:
     }
 
 
-    void processUnc() {            
-            //SAMPLING
-            if (response.result == Result::ok())
-            {
-                transLoaded = true;
-                sample();
-            }
-            else
-            {
-                nullRequest(response);
-            }
-        
+    void processUnc() {
+        //SAMPLING
+        if (response.result == Result::ok())
+        {
+            transLoaded = true;
+            sample();
+        }
+        else
+        {
+            nullRequest(response);
+        }
+
     }
 
     void sample()
@@ -54,7 +54,7 @@ public:
         {
             nullRequest(response);
         }
-        
+
     }
 
 
@@ -106,7 +106,7 @@ public:
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
             response = request.execute("LOAD");
-            //se modulo già caricato dirlo con un flag
+            //se modulo giï¿½ caricato dirlo con un flag
             // 
         }
     }
