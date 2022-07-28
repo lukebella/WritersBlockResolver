@@ -16,32 +16,17 @@ public:
     {
         if (newValue)
         {
-            openAndLoad();
-            processUnc();
+            //openAndLoad();
+            if (transLoaded)
+            {
+                DBG("Starting sample");
+                sample();
+            }
+            else
+                DBG("Error sample");
+
+                nullRequest(response);
         }
-    }
-
-    void continuation(File& midiFile)
-    {
-        sendFile(midiFile);
-        openAndLoad();
-        processCond();
-
-    }
-
-
-    void processUnc() {
-        //SAMPLING
-        if (response.result == Result::ok())
-        {
-            transLoaded = true;
-            sample();
-        }
-        else
-        {
-            nullRequest(response);
-        }
-
     }
 
     void sample()
@@ -50,22 +35,21 @@ public:
         request.setUrl("http://127.0.0.1:8080/sample");
         response = request.execute("SAMPLE");
         DBG("/SAMPLE");
-        if (response.result.failed())
-        {
-            nullRequest(response);
-        }
-
+        /*if (response.result.failed())
+            nullRequest(response);*/
     }
 
 
-    void processCond()
+    void processCond(File& midiFile)
     {
 
         //CONTINUATION
-        if (response.result == Result::ok())
+        if (transLoaded)
         {
+            DBG(midiFile.getFileName());
             DBG("LOAD termined. Starting CONTINUATION...");
             request.setUrl("http://127.0.0.1:8080/continuation");
+            request.attachFile(request.getUrl(), midiFile);
             response = request.execute("CONTINUATION");
             DBG("CONTINUATION");
 
@@ -75,9 +59,7 @@ public:
             }
         }
         else
-        {
             nullRequest(response);
-        }
     }
 
 
@@ -106,8 +88,10 @@ public:
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
             response = request.execute("LOAD");
-            //se modulo gi� caricato dirlo con un flag
+            //se modulo caricato dirlo con un flag
             // 
+            if (response.result == Result::ok())
+                transLoaded = true;
         }
     }
 
@@ -120,7 +104,7 @@ public:
         DBG("SHUTDOWN");
     }
 
-    void sendFile(File& midiFile)
+    /*void sendFile(File& midiFile)
     {
         request.setUrl("http://127.0.0.1:8080/store");
         request.attachFile(request.getUrl(), midiFile);
@@ -129,11 +113,9 @@ public:
         if (response.result == Result::ok())
             DBG("File sent.");
         else
-        {
             nullRequest(response);
-        }
-
     }
+    */
 
 private:
 

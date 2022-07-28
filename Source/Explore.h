@@ -21,7 +21,7 @@ public:
             {
                 File midifile(explorer.getResult());
                 DBG(midifile.getFileName());
-                generate.continuation(midifile);
+                generate.processCond(midifile);
                 //read the file
                 //AudioFormatReader* reader = formatManager.createReaderFor(transformer);
 

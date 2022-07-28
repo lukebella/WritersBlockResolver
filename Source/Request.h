@@ -33,7 +33,7 @@ public:
         }
 
 
-        if (operation.compare("STORE") == 0)
+       /* if (operation.compare("STORE") == 0)
         {
             DBG("Trying to send a file");
             std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
@@ -44,7 +44,7 @@ public:
 
             return response;
 
-        }
+        }*/
 
 
         //SAMPLING
@@ -54,8 +54,8 @@ public:
             file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_unc_seq.mid");
             file.getChildFile("midi_unc_seq.mid");
 
-            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-            response.result = checkInputStream(input);
+            std::unique_ptr<InputStream> inputSample(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(inputSample);
 
             if (response.result.failed())
             {
@@ -78,8 +78,9 @@ public:
             file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_cont_seq.mid");
             file.getChildFile("midi_cont_seq.mid");
 
-            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-            response.result = checkInputStream(input);
+            std::unique_ptr<InputStream> inputCont(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+            response.result = checkInputStream(inputCont);
+
             if (response.result.failed()) return response;
 
             file.deleteFile();
@@ -90,13 +91,9 @@ public:
         }
 
         std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-
-
-        //DBG("REQUEST");
-
         response.result = checkInputStream(input);
-        if (response.result.failed()) return response;
 
+        if (response.result.failed()) return response;
 
         response.bodyAsString = input->readEntireStreamAsString();
         response.result = JSON::parse(response.bodyAsString, response.body);

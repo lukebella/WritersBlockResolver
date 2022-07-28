@@ -89,13 +89,9 @@ class Model:
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
         return midi_filename
 
-    def initFile(self, myFile):
+    def store(self, myFile):
         with open(myFile, 'r+b') as f:
             return f.read()
-
-    def store(self, myFile):
-        print(os.path.join(myFile, ""))
-        return self.initFile(myFile)
 
     def primingSequence(self, midiFile):
         """filenames = {
