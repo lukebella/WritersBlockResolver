@@ -14,18 +14,17 @@ public:
 
     void unconditional(float newValue)
     {
-        if (newValue)
+        if (newValue && transLoaded)
         {
-            //openAndLoad();
-            if (transLoaded)
-            {
-                DBG("Starting sample");
-                sample();
-            }
-            else
-                DBG("Error sample");
 
-                nullRequest(response);
+            DBG("Starting sample");
+            sample();
+        }
+
+        else
+        {
+            DBG("Error sample");
+            nullRequest(response);
         }
     }
 

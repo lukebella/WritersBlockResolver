@@ -64,9 +64,7 @@ public:
             }
 
             file.deleteFile();
-
             manageDownload(file);
-
             return response;
         }
 
