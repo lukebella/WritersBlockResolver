@@ -43,6 +43,7 @@ public:
     {
 
         //CONTINUATION
+        DBG(int(transLoaded));
         if (transLoaded)
         {
             DBG(midiFile.getFileName());
@@ -90,7 +91,7 @@ public:
             //se modulo caricato dirlo con un flag
             // 
             if (response.result == Result::ok())
-                transLoaded = true;
+                setTransLoaded(true);
         }
     }
 
@@ -99,7 +100,7 @@ public:
     {
         request.setUrl("http://127.0.0.1:8080/shutdown");
         auto nullResponse = request.execute("SHUTDOWN");
-        transLoaded = false;
+        setTransLoaded(false);
         DBG("SHUTDOWN");
     }
 
@@ -115,6 +116,11 @@ public:
             nullRequest(response);
     }
     */
+
+    void setTransLoaded(bool newTrans)
+    {
+        transLoaded = newTrans;
+    }
 
 private:
 
