@@ -111,9 +111,19 @@ public:
 
     void attachFile(URL& url, File& file)
     {
+        DBG("Uploading file ");
+        url.withFileToUpload("myfile", file,"audio/midi");
+        DBG(file.getFileName());
         MemoryBlock mb = MemoryBlock();
+        if (url.readEntireBinaryStream(mb,true)) {
+            url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
+            DBG(getUrl().getDomain());
+            DBG(getUrl().getParameterNames()[1]);
+            DBG("FILE SENT");
+        }
+       
 
-        if (file.loadFileAsData(mb))
+        /*if (file.loadFileAsData(mb))
         {
             url = url.withDataToUpload("Midi File to continue", file.getFileName(), mb, "audio/midi");
             DBG(String(mb.getSize()));
@@ -126,8 +136,7 @@ public:
         else
         {
             DBG("Error in copying file into the buffer");
-        }
-        //return url.withFileToUpload("Midi File to continue", file, "audio/midi");
+        }*/ 
     }
 
     URL attachtransPath(URL& url, const String& path)
