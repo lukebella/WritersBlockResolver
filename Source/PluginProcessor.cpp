@@ -88,6 +88,8 @@ void WritersBlockResolverAudioProcessor::changeProgramName(int index, const juce
 void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     //startServer(args);
+
+    generate.initialize("http://127.0.0.1:8080");
     generate.openAndLoad();
 }
 

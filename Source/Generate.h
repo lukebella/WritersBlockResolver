@@ -31,8 +31,8 @@ public:
     void sample()
     {
         DBG("LOAD termined. Starting SAMPLE...");
-        request.setUrl("http://127.0.0.1:8080/sample");
-        response = request.execute("SAMPLE");
+        request.setUrl(SAMPLE);
+        response = request.execute(SAMPLE);
         DBG("/SAMPLE");
         /*if (response.result.failed())
             nullRequest(response);*/
@@ -48,9 +48,9 @@ public:
         {
             DBG(midiFile.getFileName());
             DBG("LOAD termined. Starting CONTINUATION...");
-            request.setUrl("http://127.0.0.1:8080/continuation");
+            request.setUrl(CONTINUATION);
             request.attachFile(request.getUrl(), midiFile);
-            response = request.execute("CONTINUATION");
+            response = request.execute(CONTINUATION);
             DBG("CONTINUATION");
 
             if (response.result == Result::ok()) {
@@ -68,10 +68,6 @@ public:
         request.execute();
     }*/
 
-    void initialize() {
-        request.setUrl("http://127.0.0.1:8080");
-        //?ckpt_path='C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/Transformer/unconditional_model_16.ckpt'
-    }
 
     void nullRequest(Request::Response response) {
 
@@ -84,10 +80,10 @@ public:
     {
         if (!transLoaded)
         {
-            request.setUrl("http://127.0.0.1:8080/load");
+            request.setUrl(LOAD);
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
-            response = request.execute("LOAD");
+            response = request.execute(LOAD);
             //se modulo caricato dirlo con un flag
             // 
             if (response.result == Result::ok())
@@ -98,8 +94,8 @@ public:
 
     void closeConn()
     {
-        request.setUrl("http://127.0.0.1:8080/shutdown");
-        auto nullResponse = request.execute("SHUTDOWN");
+        request.setUrl(SHUTDOWN);
+        auto nullResponse = request.execute(SHUTDOWN);
         setTransLoaded(false);
         DBG("SHUTDOWN");
     }
@@ -121,6 +117,12 @@ public:
     {
         transLoaded = newTrans;
     }
+
+    void initialize(const String& domain) {
+        request.init(domain);
+        //?ckpt_path='C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/Transformer/unconditional_model_16.ckpt'
+    }
+
 
 private:
 
