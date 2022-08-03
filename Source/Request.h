@@ -32,85 +32,51 @@ public:
             url = url.withPOSTData(output.toString());
         }
 
+        DBG("init " + operation);
+        file = File(PATH).getChildFile(operation + ".mid");
+        std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+        response.result = checkInputStream(input);
 
-       /* if (operation.compare("STORE") == 0)
+        if (response.result.failed())
         {
-            DBG("Trying to send a file");
-            std::unique_ptr<InputStream> input(urlRequest.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-            response.result = checkInputStream(input);
-            if (response.result.failed()) return response;
-
-            DBG("File Stored");
-
-            return response;
-
-        }*/
-
-
-        //SAMPLING
-        /*if (operation.compare(SAMPLE) == 0)
-        {
-            DBG("init sequence");
-            file = File(PATH).getChildFile("midi_unc_seq.mid");
-            std::unique_ptr<InputStream> inputSample(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-            response.result = checkInputStream(inputSample);
-
-            
-
-            file.deleteFile();
-            manageDownload(file);
-            return response;
-        }*/
-
-
-        if (operation.compare(CONTINUATION) == 0 || operation.compare(SAMPLE) == 0)
-        {
-            DBG("init "+ operation);
-            file = File(PATH).getChildFile(operation+".mid");
-            //DBG("input");
-            std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-            //DBG("checkinput");
-            response.result = checkInputStream(input);
-
-            if (response.result.failed())
-            {
-                DBG(response.result.getErrorMessage());
-                return response;
-            }
-            //DBG("bodyasstring");
-
-            response.bodyAsString = input->readEntireStreamAsString();
-            //DBG("parse");
-
-            response.result = JSON::parse(response.bodyAsString, response.body);
-            //response = req(hasFields, response);
-            //DBG("deletefile");
-
-            file.deleteFile();
-            //DBG("download");
-
-            manageDownload(file);
-
+            DBG(response.result.getErrorMessage());
             return response;
         }
 
-        else
-        {
-            std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-            response.result = checkInputStream(input);
+        response.bodyAsString = input->readEntireStreamAsString();
+        response.result = JSON::parse(response.bodyAsString, response.body);
 
-            if (response.result.failed())
-            {
-                DBG(response.result.getErrorMessage());
-                return response;
-            }
-            response.bodyAsString = input->readEntireStreamAsString();
-            response.result = JSON::parse(response.bodyAsString, response.body);
+        file.deleteFile();
+        manageDownload(file);
 
-            return response;
-            //response = req(hasFields, response);
-        }
+        return response;
+
     }
+
+    Request::Response execute()
+    {
+        bool hasFields = (fields.getProperties().size() > 0);
+        if (hasFields)
+        {
+            MemoryOutputStream output;
+
+            fields.writeAsJSON(output, 0, false, 20);
+            url = url.withPOSTData(output.toString());
+        }
+        std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+        response.result = checkInputStream(input);
+
+        if (response.result.failed())
+        {
+            DBG(response.result.getErrorMessage());
+            return response;
+        }
+        response.bodyAsString = input->readEntireStreamAsString();
+        response.result = JSON::parse(response.bodyAsString, response.body);
+
+        return response;
+    }
+
 
 
     /*Request::Response req(bool hasFields, Request::Response response)
@@ -138,18 +104,20 @@ public:
     void attachFile(URL& url, File& file)
     {
         DBG("Uploading file ");
-        //url.withFileToUpload(file.getFileName(), file, "audio/midi");
+        url.withFileToUpload(file.getFileName(), File(file.getFullPathName()), "audio/midi");
         DBG(file.getFileName());
         MemoryBlock mb = MemoryBlock();
-        /*if (url.readEntireBinaryStream(mb)) {
-            url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
-            DBG(getUrl().getDomain());
-            DBG(getUrl().getParameterNames()[1]);
-            DBG("FILE SENT");
-        }*/
-       
 
-        if (file.loadFileAsData(mb))
+
+        url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
+        DBG(getUrl().getQueryString());
+        DBG(getUrl().getParameterNames()[1]);
+        DBG("FILE SENT");
+
+
+
+
+        /*if (file.loadFileAsData(mb))
         {
             url = url.withDataToUpload("Midi File to continue", file.getFileName(), mb, "audio/midi");
             DBG(String(mb.getSize()));
@@ -162,7 +130,7 @@ public:
         else
         {
             DBG("Error in copying file into the buffer");
-        }
+        }*/
     }
 
     void manageDownload(File& file) {

@@ -51,11 +51,11 @@ private:
 
     void parameterChanged(const String& paramID, float newValue) override;
 
-    void startServer(const ArgumentList& args);  //int argc, char* argv[]
+    void startServer();  
 
     AudioProcessorValueTreeState parameters;
 
-    ConsoleApplication app;
+    ChildProcess server;
 
     Generate generate;
     Explore explorer;

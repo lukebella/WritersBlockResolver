@@ -63,12 +63,6 @@ public:
     }
 
 
-
-    /*/void process(juce::MidiFile midiFile, int max_primer_seconds) {
-        request.execute();
-    }*/
-
-
     void nullRequest(Request::Response response) {
 
         DBG("Richiesta non eseguita");
@@ -83,7 +77,7 @@ public:
             request.setUrl(LOAD);
             DBG(request.getUrl().getDomain());
             DBG("Starting LOAD");
-            response = request.execute(LOAD);
+            response = request.execute();
             //se modulo caricato dirlo con un flag
             // 
             if (response.result == Result::ok())
@@ -95,7 +89,7 @@ public:
     void closeConn()
     {
         request.setUrl(SHUTDOWN);
-        auto nullResponse = request.execute(SHUTDOWN);
+        auto nullResponse = request.execute();
         setTransLoaded(false);
         DBG("SHUTDOWN");
     }

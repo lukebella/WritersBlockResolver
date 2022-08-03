@@ -2,21 +2,15 @@
 //con GUI non parte la generazione(com'è possibile?)
     //riuscire a creare un componente in cui compaia la file http response e trascinarlo nella daw
 
-
-
-
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
 #include "Parameters.h"
 //==============================================================================
-WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor() :
+WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
     parameters(*this, nullptr, "WBR_parameters", {
         std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterBool>(NAME_SERVER, "Server", DEFAULT_ACTIVE),
-
 
         std::make_unique<AudioParameterBool>(NAME_EXPLORE, "Find your module", DEFAULT_ACTIVE),
         })
@@ -87,8 +81,7 @@ void WritersBlockResolverAudioProcessor::changeProgramName(int index, const juce
 //==============================================================================
 void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    //startServer(args);
-
+    //startServer();
     generate.initialize("http://127.0.0.1:8080");
     generate.openAndLoad();
 }
@@ -134,7 +127,6 @@ void WritersBlockResolverAudioProcessor::setStateInformation(const void* data, i
 
 void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID, float newValue)
 {
-   
 
    if (paramID == NAME_UNC_REQUEST) 
       generate.unconditional(newValue);
@@ -150,14 +142,22 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
     
 }
 
-void WritersBlockResolverAudioProcessor::startServer(const ArgumentList& args)  //int argc, char* argv[]
+/*void WritersBlockResolverAudioProcessor::startServer()
 {
-    app.addDefaultCommand({ "python -m writers_block_resolver.server ./Transformer/unconditional_model_16.ckpt" });
-    app.findAndRunCommand(args);
+    if (server.start("python -m writers_block_resolver.server ./Transformer/unconditional_model_16.ckpt"))
+    {
+        while (server.isRunning())
+        {
+            DBG("Server is switched-on");
+            DBG(server.readAllProcessOutput());
+        }
+    }
+    else
+    {
+        DBG("Error in opening server");
+    }
 
-    DBG("Server is switched-on");
-
-}
+}*/
 
 
 //==============================================================================
