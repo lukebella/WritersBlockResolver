@@ -100,12 +100,9 @@ class Model:
             'Clair de Lune': '/content/clair_de_lune.mid',
         }"""
         print(os.path.join(midiFile, ""))
-        primer = midiFile
         print(os.path.exists(midiFile))
         #'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
-
-
-        self.primer_ns = note_seq.midi_file_to_note_sequence(primer)    #filenames[primer]
+        self.primer_ns = note_seq.midi_file_to_note_sequence(midiFile)    #filenames[primer]
 
         # Handle sustain pedal in the primer.
         self.primer_ns = note_seq.apply_sustain_control_changes(self.primer_ns)
@@ -158,12 +155,15 @@ class Model:
             encoder=self.unconditional_encoders['targets'])
         ns = note_seq.midi_file_to_note_sequence(midi_filename)
 
-        """
         # Append continuation to primer.
+        continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
+
+        # note_seq.sequence_proto_to_midi_file(continuation_ns, '/tmp/continuation.mid')
+        """
         continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
         print(continuation_ns)"""
         print("Continuation generated")
-        return midi_filename
+        return continuation_ns   #I don't think it's MIDI, do note_seq.sequence_proto_to_midi_file instead? Or decoding after concatenating?
 
 
 

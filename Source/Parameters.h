@@ -21,6 +21,7 @@
 
 
 #define NAME_EXPLORE "FindTranformer"
+#define NAME_PRIMER_SECONDS "Max_Primer_Seconds"
 
 
 //openmode file
