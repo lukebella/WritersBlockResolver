@@ -34,8 +34,9 @@ class ModelServer():
 
 
     @cherrypy.expose
-    def continuation(self, myFile):
-        midiFileToContinue = self.store(myFile)
+    def continuation(self):#, myFile):
+        midiFileToContinue = self.store(cherrypy.request.body.read())
+        #midiFileToContinue = self.store(myFile)
         if os.path.exists(midiFileToContinue):
             #and (not(isinstance(midiFileToContinue, str))):
             self.model.primingSequence(midiFileToContinue)
