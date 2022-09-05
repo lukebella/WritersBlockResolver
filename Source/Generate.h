@@ -1,4 +1,4 @@
-﻿
+
 #pragma once
 #include <JuceHeader.h>
 #include "Request.h"
@@ -24,7 +24,7 @@ public:
         else
         {
             DBG("Error sample");
-            nullRequest(response);
+           // nullRequest(response);
         }
     }
 

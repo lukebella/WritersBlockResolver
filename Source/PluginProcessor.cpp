@@ -3,14 +3,14 @@
     //riuscire a creare un componente in cui compaia la file http response e trascinarlo nella daw
 
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
+// #include "PluginEditor.h"
 #include "Parameters.h"
 //==============================================================================
 WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
     parameters(*this, nullptr, "WBR_parameters", {
         std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
-        std::make_unique<AudioParameter>(NAME_PRIMER_SECONDS, "Generate Conditional Sequence", DEFAULT_DISABLED),
+        //std::make_unique<AudioParameterFloat>(NAME_PRIMER_SECONDS, "Max Primer Seconds"),
 
         std::make_unique<AudioParameterBool>(NAME_SERVER, "Server", DEFAULT_ACTIVE),
 
@@ -106,8 +106,8 @@ bool WritersBlockResolverAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* WritersBlockResolverAudioProcessor::createEditor()
 {
-    return new PluginEditor(*this, parameters);
-    //return nullptr;
+    //return new PluginEditor();
+    return nullptr;
 
 }
 

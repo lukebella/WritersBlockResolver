@@ -10,18 +10,20 @@ class ModelServer():
     def __init__(self, ckpt_path):
         self.model = Model()
         self.ckpt_path = ckpt_path
+        self.isLoaded = False
 
 
     # read the uploaded file
     def store(self, myFile):
         return self.model.store(myFile)
+    #cherry http body
 
 
     @cherrypy.expose
     def load(self): #ckpt_path):   ='./Transformer/unconditional_model_16.ckpt'  C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/unconditional_model_16.ckpt
-        print(self.ckpt_path)
-        self.model.load(self.ckpt_path)
-        print()
+        #print(self.ckpt_path)
+        if not self.isLoaded:
+            self.model.load(self.ckpt_path)
         return
 
 
@@ -32,7 +34,7 @@ class ModelServer():
 
 
     @cherrypy.expose
-    def continuation(self,myFile):
+    def continuation(self, myFile):
         midiFileToContinue = self.store(myFile)
         if os.path.exists(midiFileToContinue):
             #and (not(isinstance(midiFileToContinue, str))):
@@ -49,5 +51,6 @@ class ModelServer():
 
 
 if __name__ == '__main__':
+    os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
     cherrypy.quickstart(ModelServer(ckpt_path=sys.argv[1]))
 

@@ -24,17 +24,20 @@ public:
     Request::Response execute(const String& operation)
     {
         bool hasFields = (fields.getProperties().size() > 0);
-        if (hasFields)
+        /*if (hasFields)
         {
             MemoryOutputStream output;
 
             fields.writeAsJSON(output, 0, false, 20);
             url = url.withPOSTData(output.toString());
-        }
+        }*/
 
         DBG("init " + operation);
         file = File(PATH).getChildFile(operation + ".mid");
-        std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+
+        //options = URL::InputStreamOptions();
+
+        /*std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), -1, &response.headers, &response.status, 5, verb));
         response.result = checkInputStream(input);
 
         if (response.result.failed())
@@ -44,7 +47,7 @@ public:
         }
 
         response.bodyAsString = input->readEntireStreamAsString();
-        response.result = JSON::parse(response.bodyAsString, response.body);
+        //response.result = JSON::parse(response.bodyAsString, response.body);*/
 
         file.deleteFile();
         manageDownload(file);
@@ -171,6 +174,7 @@ public:
 protected:
 
     URL url;
+    //URL::InputStreamOptions options;
     StringPairArray headers;
     String verb;
     DynamicObject fields;

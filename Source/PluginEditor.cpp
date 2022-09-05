@@ -20,18 +20,17 @@
 //[Headers] You can add your own extra header files here...
 //[/Headers]
 
-#include "PluginEditor.h"
-#include "Parameters.h"
+/*#include "PluginEditor.h"
+
+
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
 //==============================================================================
-PluginEditor::PluginEditor (WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor(&p), processor(p), valueTreeState(vts)
-
+PluginEditor::PluginEditor ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
-    
+
     file = File("C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/midi_unc_seq.mid");
     //[/Constructor_pre]
 
@@ -42,27 +41,15 @@ PluginEditor::PluginEditor (WritersBlockResolverAudioProcessor& p, AudioProcesso
 
     unc_seq_gen->setBounds (280, 192, 150, 24);
 
-    int flags = FileBrowserComponent::openMode |
-        FileBrowserComponent::canSelectFiles |
-        FileBrowserComponent::filenameBoxIsReadOnly;
-
-    //midi_unc_file.reset (new juce::FileBrowserComponent(flags,file,nullptr,nullptr));
-    midi_unc_file.reset(new MidiDrag);
-
+    midi_unc_file.reset (new juce::Component());
     addAndMakeVisible (midi_unc_file.get());
     midi_unc_file->setName ("midi_unc_file");
 
     midi_unc_file->setBounds (216, 280, 150, 24);
 
-    /*juce::DragAndDropContainer* dragC =
-        juce::DragAndDropContainer::findParentDragContainerFor(*midi_unc_file);
-    if (dragC->isDragAndDropActive())
-    {
-        dad.startDragging("Uncond. MIDI file generated", *midi_unc_file);
-    }*/
+
     //[UserPreSize]
     //[/UserPreSize]
-    genUncFileAttachment.reset(new ButtonAttachment(valueTreeState, NAME_UNC_REQUEST, *unc_seq_gen));
 
     setSize (600, 400);
 
@@ -83,10 +70,10 @@ PluginEditor::~PluginEditor()
 
     //[/Destructor_pre]
 
-    unc_seq_gen ->setLookAndFeel(nullptr);
-    midi_unc_file->setLookAndFeel(nullptr);
-
     unc_seq_gen = nullptr;
+    midi_unc_file = nullptr;
+
+
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
 }
@@ -139,6 +126,7 @@ void PluginEditor::resized()
 //[/MiscUserCode]
 
 
+
 //==============================================================================
 #if 0
 /*  -- Projucer information section --
@@ -168,7 +156,7 @@ BEGIN_JUCER_METADATA
 
 END_JUCER_METADATA
 */
-#endif
+// #endif
 
 
 //[EndFile] You can add extra defines here...

@@ -82,7 +82,7 @@ class Model:
     def sample(self):
         self.decode_length = 1024
         sample_ids = next(self.unconditional_samples)['outputs']
-        print(sample_ids)
+        #print(sample_ids) usare log cherrypy
         print("Sequence generated")
 
         # Decode to NoteSequence.

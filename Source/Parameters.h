@@ -3,7 +3,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-#define PATH "C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969"
+#define PATH "C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969"   //fare FileChooser per far scegliere all'utente dove salvare
 
 
 #define NAME_UNC_REQUEST "HTTPUncRequest"
