@@ -11,7 +11,7 @@ from tensor2tensor.utils import decoding
 from tensor2tensor.utils import trainer_lib
 from magenta.models.score2perf import score2perf
 import note_seq
-
+import logging
 tf.disable_v2_behavior()
 
 class PianoPerformanceLanguageModelProblem(score2perf.Score2PerfProblem):
@@ -34,6 +34,7 @@ class Model:
         self.hparams = trainer_lib.create_hparams(hparams_set=self.hparams_set)
         self.unconditional_samples = None
         self.primer_ns = None
+        self.max_primer_seconds = 1
 
     def load(self,ckpt_path):
 
@@ -93,7 +94,7 @@ class Model:
         with open(myFile, 'r+b') as f:
             return f.read()
 
-    def primingSequence(self, midiFile):
+    def primingSequence(self, midiFile, max_primer_seconds):
         """filenames = {
             'C major arpeggio': '/content/c_major_arpeggio.mid',
             'C major scale': '/content/c_major_scale.mid',
@@ -108,11 +109,12 @@ class Model:
         self.primer_ns = note_seq.apply_sustain_control_changes(self.primer_ns)
 
         # Trim to desired number of seconds.
-        max_primer_seconds = 20  # @param {type:"slider", min:1, max:120}
-        if self.primer_ns.total_time > max_primer_seconds:
-            print('Primer is longer than %d seconds, truncating.' % max_primer_seconds)
+        self.max_primer_seconds = max_primer_seconds  # @param {type:"slider", min:1, max:120}
+        logging.warning("max_prim_sec=", self.max_primer_seconds)
+        if self.primer_ns.total_time > self.max_primer_seconds:
+            print('Primer is longer than %d seconds, truncating.' % self.max_primer_seconds)
             primer_ns = note_seq.extract_subsequence(
-                self.primer_ns, 0, max_primer_seconds)
+                self.primer_ns, 0, self.max_primer_seconds)
 
         # Remove drums from primer if present.
         if any(note.is_drum for note in self.primer_ns.notes):

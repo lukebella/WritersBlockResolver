@@ -104,25 +104,24 @@ public:
         return url;
     }
 
-    URL attachParam(const String& paramName, const int& paramValue ) {
-        return url.withParameter(paramName, String(paramValue));
+    void attachParam(const String& paramName, const int& paramValue ) {
+        DBG("Attach parameters...");
+        url = url.withParameter(paramName, String(paramValue));
     }
 
     void attachFile(URL& url, File& file)
     {
         DBG("Uploading file ");
-        url.withFileToUpload(file.getFileName(), File(file.getFullPathName()), "audio/midi");
+        url = url.withFileToUpload(file.getFileName(), File(file.getFullPathName()), "audio/midi");
         DBG(file.getFileName());
-        MemoryBlock mb = MemoryBlock();
+        /*MemoryBlock mb = MemoryBlock();
 
         if (file.loadFileAsData(mb))
         {
-            url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
-            DBG(getUrl().getQueryString());
-            DBG(getUrl().getParameterNames()[1]);
+            url = url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
             DBG("FILE SENT");
         }
-
+        */
 
 
 

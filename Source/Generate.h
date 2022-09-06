@@ -52,10 +52,16 @@ public:
             DBG("LOAD termined. Starting CONTINUATION...");
             request.setUrl(CONTINUATION);
             request.attachParam("max_primer_seconds", maxPrimerSeconds);
-            String name = request.getUrl().getParameterNames()[1];
-            String value = request.getUrl().getParameterValues()[1];
-            DBG(name, value);
+            DBG(request.getUrl().toString(true));
+            /*StringArray name = request.getUrl().getParameterNames();
+            StringArray value = request.getUrl().getParameterValues();
+            for (int i = 0; i < name.size(); i++)
+            {
+                DBG(name[i], value[i]);
+
+            }*/
             request.attachFile(request.getUrl(), midiFile);
+            DBG(request.getUrl().toString(true));
             response = request.execute(CONTINUATION, pathToSave);
             DBG("CONTINUATION");
         }
