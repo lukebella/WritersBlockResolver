@@ -31,6 +31,25 @@ public:
     }
 
 
+    void whereToSave(float newValue)
+    {
+        if (newValue)
+        {
+            FileChooser explorer("Select where you want to save the file", File::getSpecialLocation(File::userHomeDirectory), "");
+
+            if (explorer.browseForDirectory())
+            {
+                File dirSave(explorer.getResult());
+                DBG(dirSave.getFullPathName());
+                //generate.setTransLoaded(true);
+                generate.processCond(dirSave);
+                //read the file
+                //AudioFormatReader* reader = formatManager.createReaderFor(transformer);
+
+            }
+        }
+    }
+
     // for continuation (dragging from DAW to component)
     bool isInterestedInFileDrag(const StringArray& files) override
     {

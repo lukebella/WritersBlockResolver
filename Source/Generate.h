@@ -43,18 +43,23 @@ public:
     {
 
         //CONTINUATION
-        DBG(midiFile.getFileName());
-        DBG("LOAD termined. Starting CONTINUATION...");
-        request.setUrl(CONTINUATION);
-        request.attachFile(request.getUrl(), midiFile);
-        response = request.execute(CONTINUATION);
-        DBG("CONTINUATION");
+        DBG(int(transLoaded));
+        if (transLoaded)
+        {
+            DBG(midiFile.getFileName());
+            DBG("LOAD termined. Starting CONTINUATION...");
+            request.setUrl(CONTINUATION);
+            request.attachFile(request.getUrl(), midiFile);
+            response = request.execute(CONTINUATION);
+            DBG("CONTINUATION");
 
-        if (response.result == Result::ok()) {
-            DBG("CONTINUATION termined. Starting SHUTDOWN...");
-            closeConn();
+            if (response.result == Result::ok()) {
+                DBG("CONTINUATION termined. Starting SHUTDOWN...");
+                closeConn();
+            }
         }
-   
+        else
+            nullRequest(response);
     }
 
 

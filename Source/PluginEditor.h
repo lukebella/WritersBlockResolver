@@ -15,9 +15,9 @@
   Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
+*/
 
-
-#pragma once
+/*#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
@@ -34,7 +34,8 @@
 
     Describe your class and how it works here!
                                                                     //[/Comments]
-
+*/
+/*
 class PluginEditor  : public juce::AudioProcessorEditor
 {
 public:
@@ -70,9 +71,8 @@ private:
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
-};
+};*/
 
-*/
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 

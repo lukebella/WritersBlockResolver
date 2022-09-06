@@ -12,7 +12,7 @@ WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
         std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
         //std::make_unique<AudioParameterFloat>(NAME_PRIMER_SECONDS, "Max Primer Seconds"),
 
-        std::make_unique<AudioParameterBool>(NAME_SERVER, "Server", DEFAULT_ACTIVE),
+        std::make_unique<AudioParameterBool>(NAME_SERVER, "Load Model", DEFAULT_DISABLED),
 
         std::make_unique<AudioParameterBool>(NAME_EXPLORE, "Find your module", DEFAULT_ACTIVE),
         })
@@ -85,7 +85,6 @@ void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int sa
 {
     //startServer();
     generate.initialize("http://127.0.0.1:8080");
-    generate.openAndLoad();
 }
 
 void WritersBlockResolverAudioProcessor::releaseResources()
@@ -137,7 +136,7 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
        explorer.findMidi(newValue);
 
    if (paramID == NAME_SERVER)
-       generate.closeConn();
+       generate.openAndLoad();
    /*if (paramID == NAME_EXPLORE)
        explorer.findTransformer();*/
 

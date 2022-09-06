@@ -4,6 +4,7 @@ from cherrypy.lib.static import serve_file
 
 import os
 import sys
+import logging
 
 class ModelServer():
 
@@ -24,26 +25,32 @@ class ModelServer():
         #print(self.ckpt_path)
         if not self.isLoaded:
             self.model.load(self.ckpt_path)
+            self.isLoaded = True
+            logging.warning("Model loaded")
         return
 
 
     @cherrypy.expose
     def sample(self):
         filename = self.model.sample()
+        logging.warning("Unconditional sequence generated")
         return serve_file(filename, "audio/midi", "attachment", "Unconditional Midi File")
 
 
     @cherrypy.expose
     def continuation(self):#, myFile):
         midiFileToContinue = self.store(cherrypy.request.body.read())
+        logging.warning(os.path.isfile(midiFileToContinue))
+
         #midiFileToContinue = self.store(myFile)
         if os.path.exists(midiFileToContinue):
             #and (not(isinstance(midiFileToContinue, str))):
             self.model.primingSequence(midiFileToContinue)
             cont = self.model.continuation()
+            logging.warning("Conditional sequence generated")
             return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
         else:
-            print("No file istance")
+            logging.warning("No file istance")
 
     @cherrypy.expose
     def shutdown(self):

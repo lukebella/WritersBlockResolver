@@ -23,12 +23,37 @@ public:
 
     Request::Response execute(const String& operation)
     {
+        bool hasFields = (fields.getProperties().size() > 0);
+        /*if (hasFields)
+        {
+            MemoryOutputStream output;
+
+            fields.writeAsJSON(output, 0, false, 20);
+            url = url.withPOSTData(output.toString());
+        }*/
+
         DBG("init " + operation);
         file = File(PATH).getChildFile(operation + ".mid");
+
+        //options = URL::InputStreamOptions();
+
+        /*std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), -1, &response.headers, &response.status, 5, verb));
+        response.result = checkInputStream(input);
+
+        if (response.result.failed())
+        {
+            DBG(response.result.getErrorMessage());
+            return response;
+        }
+
+        response.bodyAsString = input->readEntireStreamAsString();
+        //response.result = JSON::parse(response.bodyAsString, response.body);*/
+
         file.deleteFile();
         manageDownload(file);
 
         return response;
+
     }
 
     Request::Response execute()
@@ -56,6 +81,20 @@ public:
     }
 
 
+
+    /*Request::Response req(bool hasFields, Request::Response response)
+    {
+        std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
+        response.result = checkInputStream(input);
+
+        if (response.result.failed()) return response;
+
+        response.bodyAsString = input->readEntireStreamAsString();
+        response.result = JSON::parse(response.bodyAsString, response.body);
+
+        return response;
+    }*/
+
     void setUrl(const String& endpoint) {
         url = url.withNewSubPath(endpoint);
     }
@@ -68,12 +107,12 @@ public:
     void attachFile(URL& url, File& file)
     {
         DBG("Uploading file ");
-        /*url.withFileToUpload(file.getFileName(), File(file.getFullPathName()), "audio/midi");
-        DBG(file.getFileName());*/
+        url.withFileToUpload(file.getFileName(), File(file.getFullPathName()), "audio/midi");
+        DBG(file.getFileName());
         MemoryBlock mb = MemoryBlock();
 
 
-        url.withDataToUpload(file.getFileName(), file.getFullPathName(), mb, "audio/midi");
+        url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
         DBG(getUrl().getQueryString());
         DBG(getUrl().getParameterNames()[1]);
         DBG("FILE SENT");

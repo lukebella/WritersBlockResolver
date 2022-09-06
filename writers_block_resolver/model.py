@@ -158,7 +158,7 @@ class Model:
         # Append continuation to primer.
         continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
 
-        # note_seq.sequence_proto_to_midi_file(continuation_ns, '/tmp/continuation.mid')
+        note_seq.sequence_proto_to_midi_file(continuation_ns, '/tmp/continuation.mid')
         """
         continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
         print(continuation_ns)"""
