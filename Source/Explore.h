@@ -11,44 +11,9 @@ public:
     Explore() {}
     ~Explore() {}
 
-    void findMidi(float newValue)
-    {
-        if (newValue)
-        {
-            FileChooser explorer("Select a MIDI file to continue", File::getSpecialLocation(File::userHomeDirectory), "*.mid");
-
-            if (explorer.browseForFileToOpen())
-            {
-                File midifile(explorer.getResult());
-                DBG(midifile.getFileName());
-                //generate.setTransLoaded(true);
-                generate.processCond(midifile);
-                //read the file
-                //AudioFormatReader* reader = formatManager.createReaderFor(transformer);
-
-            }
-        }
-    }
+    
 
 
-    void whereToSave(float newValue)
-    {
-        if (newValue)
-        {
-            FileChooser explorer("Select where you want to save the file", File::getSpecialLocation(File::userHomeDirectory), "");
-
-            if (explorer.browseForDirectory())
-            {
-                File dirSave(explorer.getResult());
-                DBG(dirSave.getFullPathName());
-                //generate.setTransLoaded(true);
-                generate.processCond(dirSave);
-                //read the file
-                //AudioFormatReader* reader = formatManager.createReaderFor(transformer);
-
-            }
-        }
-    }
 
     // for continuation (dragging from DAW to component)
     bool isInterestedInFileDrag(const StringArray& files) override
@@ -79,8 +44,6 @@ public:
 
 private:
 
-    AudioFormatManager formatManager;
     DragAndDropContainer recipient;
-    Generate generate;
 
 };

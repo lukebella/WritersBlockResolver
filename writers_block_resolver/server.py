@@ -39,7 +39,9 @@ class ModelServer():
 
     @cherrypy.expose
     def continuation(self):#, myFile):
-        midiFileToContinue = self.store(cherrypy.request.body.read())
+        logging.warning(str(cherrypy.request.body.read()))
+        midiFileToContinue = cherrypy.request.body.read()
+
         logging.warning(os.path.isfile(midiFileToContinue))
 
         #midiFileToContinue = self.store(myFile)

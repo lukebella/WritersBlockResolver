@@ -10,7 +10,7 @@ WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
     parameters(*this, nullptr, "WBR_parameters", {
         std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
-        //std::make_unique<AudioParameterFloat>(NAME_PRIMER_SECONDS, "Max Primer Seconds"),
+        std::make_unique<AudioParameterInt>(NAME_PRIMER_SECONDS, "Max Primer Seconds", 1, 120, PRIMER_SECONDS),
 
         std::make_unique<AudioParameterBool>(NAME_SERVER, "Load Model", DEFAULT_DISABLED),
 
@@ -21,6 +21,7 @@ WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
     parameters.addParameterListener(NAME_UNC_REQUEST, this);
     parameters.addParameterListener(NAME_COND_REQUEST, this);
     parameters.addParameterListener(NAME_SERVER, this);
+    parameters.addParameterListener(NAME_PRIMER_SECONDS, this);
 
 
 }
@@ -133,10 +134,14 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
       generate.unconditional(newValue);
 
    if (paramID == NAME_COND_REQUEST)
-       explorer.findMidi(newValue);
+       generate.processCond(newValue);
 
    if (paramID == NAME_SERVER)
        generate.openAndLoad();
+
+   if (paramID == NAME_PRIMER_SECONDS)
+       generate.setPrimerSeconds(newValue);
+  
    /*if (paramID == NAME_EXPLORE)
        explorer.findTransformer();*/
 

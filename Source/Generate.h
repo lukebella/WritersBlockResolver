@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "Request.h"
 #include "Parameters.h"
+#include "Explore.h"
 
 class Generate {
 
@@ -16,7 +17,6 @@ public:
     {
         if (newValue && transLoaded)
         {
-
             DBG("Starting sample");
             sample();
         }
@@ -28,35 +28,36 @@ public:
         }
     }
 
-    void sample()
+    void sample()//const String& pathToSave)
     {
         DBG("LOAD termined. Starting SAMPLE...");
         request.setUrl(SAMPLE);
-        response = request.execute(SAMPLE);
+        pathToSave = whereToSave();
+        response = request.execute(SAMPLE, pathToSave);
         DBG("/SAMPLE");
         /*if (response.result.failed())
             nullRequest(response);*/
     }
 
 
-    void processCond(File& midiFile)
+    void processCond(float newValue)
     {
-
+        
         //CONTINUATION
-        DBG(int(transLoaded));
         if (transLoaded)
         {
+            pathToSave = whereToSave();
+            midiFile = findMidi();
             DBG(midiFile.getFileName());
             DBG("LOAD termined. Starting CONTINUATION...");
             request.setUrl(CONTINUATION);
+            request.attachParam("max_primer_seconds", maxPrimerSeconds);
+            String name = request.getUrl().getParameterNames()[1];
+            String value = request.getUrl().getParameterValues()[1];
+            DBG(name, value);
             request.attachFile(request.getUrl(), midiFile);
-            response = request.execute(CONTINUATION);
+            response = request.execute(CONTINUATION, pathToSave);
             DBG("CONTINUATION");
-
-            if (response.result == Result::ok()) {
-                DBG("CONTINUATION termined. Starting SHUTDOWN...");
-                closeConn();
-            }
         }
         else
             nullRequest(response);
@@ -93,7 +94,21 @@ public:
         setTransLoaded(false);
         DBG("SHUTDOWN");
     }
+    
 
+    String whereToSave()
+    {
+
+        FileChooser explorer("Select where you want to save the file", File::getSpecialLocation(File::userHomeDirectory), "");
+
+        if (explorer.browseForDirectory())
+        {
+            File dirSave(explorer.getResult());
+            DBG(dirSave.getFullPathName());
+            return dirSave.getFullPathName();
+        }
+
+    }
     /*void sendFile(File& midiFile)
     {
         request.setUrl("http://127.0.0.1:8080/store");
@@ -117,13 +132,32 @@ public:
         //?ckpt_path='C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/Transformer/unconditional_model_16.ckpt'
     }
 
+    File findMidi()
+    {
+        FileChooser explorer("Select a MIDI file to continue", File::getSpecialLocation(File::userHomeDirectory), "*.mid");
 
+        if (explorer.browseForFileToOpen())
+        {
+            File midifile(explorer.getResult());
+            DBG(midifile.getFileName());
+            //generate.setTransLoaded(true);
+            return midifile;
+
+        }
+        
+    }
+
+    void setPrimerSeconds(int newValue) {
+        maxPrimerSeconds = newValue;
+    }
 private:
 
     Request request;
     Request::Response response;
     bool transLoaded = false;
-
+    String pathToSave;
+    File midiFile;
+    int maxPrimerSeconds = PRIMER_SECONDS;
 };
 
 

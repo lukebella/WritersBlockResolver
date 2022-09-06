@@ -21,7 +21,7 @@ public:
     } response;
 
 
-    Request::Response execute(const String& operation)
+    Request::Response execute(const String& operation, const String& pathToSave)
     {
         bool hasFields = (fields.getProperties().size() > 0);
         /*if (hasFields)
@@ -33,7 +33,7 @@ public:
         }*/
 
         DBG("init " + operation);
-        file = File(PATH).getChildFile(operation + ".mid");
+        file = File(pathToSave).getChildFile(operation + ".mid");
 
         //options = URL::InputStreamOptions();
 
@@ -104,6 +104,10 @@ public:
         return url;
     }
 
+    URL attachParam(const String& paramName, const int& paramValue ) {
+        return url.withParameter(paramName, String(paramValue));
+    }
+
     void attachFile(URL& url, File& file)
     {
         DBG("Uploading file ");
@@ -111,11 +115,13 @@ public:
         DBG(file.getFileName());
         MemoryBlock mb = MemoryBlock();
 
-
-        url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
-        DBG(getUrl().getQueryString());
-        DBG(getUrl().getParameterNames()[1]);
-        DBG("FILE SENT");
+        if (file.loadFileAsData(mb))
+        {
+            url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
+            DBG(getUrl().getQueryString());
+            DBG(getUrl().getParameterNames()[1]);
+            DBG("FILE SENT");
+        }
 
 
 
@@ -160,10 +166,6 @@ public:
         }
     }
 
-    URL attachtransPath(URL& url, const String& path)
-    {
-        return url.withParameter("ckpt_path", path);
-    }
 
     void init(const String& domain)
     {

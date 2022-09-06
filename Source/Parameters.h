@@ -9,6 +9,8 @@
 #define NAME_UNC_REQUEST "HTTPUncRequest"
 #define NAME_COND_REQUEST "HTTPCondRequest"
 #define DEFAULT_DISABLED 0
+#define PRIMER_SECONDS 20
+
 
 #define LOAD "load"
 #define SAMPLE "sample"
