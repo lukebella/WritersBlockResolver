@@ -3,7 +3,6 @@
 #include <JuceHeader.h>
 #include "Request.h"
 #include "Parameters.h"
-#include "Explore.h"
 
 class Generate {
 
@@ -53,13 +52,7 @@ public:
             request.setUrl(CONTINUATION);
             request.attachParam("max_primer_seconds", maxPrimerSeconds);
             DBG(request.getUrl().toString(true));
-            /*StringArray name = request.getUrl().getParameterNames();
-            StringArray value = request.getUrl().getParameterValues();
-            for (int i = 0; i < name.size(); i++)
-            {
-                DBG(name[i], value[i]);
-
-            }*/
+            
             request.attachFile(request.getUrl(), midiFile);
             DBG(request.getUrl().toString(true));
             response = request.execute(CONTINUATION, pathToSave);
@@ -100,11 +93,10 @@ public:
         setTransLoaded(false);
         DBG("SHUTDOWN");
     }
-    
+   
 
     String whereToSave()
     {
-
         FileChooser explorer("Select where you want to save the file", File::getSpecialLocation(File::userHomeDirectory), "");
 
         if (explorer.browseForDirectory())

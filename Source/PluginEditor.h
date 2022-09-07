@@ -16,8 +16,8 @@
 
   ==============================================================================
 */
-
-/*#pragma once
+/*
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
@@ -71,8 +71,8 @@ private:
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
-};*/
-
+};
+*/
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 

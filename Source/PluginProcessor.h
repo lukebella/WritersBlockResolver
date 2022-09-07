@@ -4,7 +4,6 @@
 
 #include <JuceHeader.h>
 #include "Generate.h"
-#include "Explore.h"
 
 //==============================================================================
 /**
@@ -50,15 +49,8 @@ public:
 private:
 
     void parameterChanged(const String& paramID, float newValue) override;
-
-    void startServer();  
-
     AudioProcessorValueTreeState parameters;
-
-    ChildProcess server;
-
     Generate generate;
-    Explore explorer;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WritersBlockResolverAudioProcessor)
 };

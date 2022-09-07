@@ -24,30 +24,11 @@ public:
     Request::Response execute(const String& operation, const String& pathToSave)
     {
         bool hasFields = (fields.getProperties().size() > 0);
-        /*if (hasFields)
-        {
-            MemoryOutputStream output;
-
-            fields.writeAsJSON(output, 0, false, 20);
-            url = url.withPOSTData(output.toString());
-        }*/
+        //non ho capito perchè senza questa dichiarazione, anche se hasFields non viene implementato in manageDownload, non funziona il download.
+        //Ho provato ad assegnarlo a withUsePost di downloadToFile, ma non funziona ugualmente...
 
         DBG("init " + operation);
         file = File(pathToSave).getChildFile(operation + ".mid");
-
-        //options = URL::InputStreamOptions();
-
-        /*std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), -1, &response.headers, &response.status, 5, verb));
-        response.result = checkInputStream(input);
-
-        if (response.result.failed())
-        {
-            DBG(response.result.getErrorMessage());
-            return response;
-        }
-
-        response.bodyAsString = input->readEntireStreamAsString();
-        //response.result = JSON::parse(response.bodyAsString, response.body);*/
 
         file.deleteFile();
         manageDownload(file);
@@ -81,20 +62,6 @@ public:
     }
 
 
-
-    /*Request::Response req(bool hasFields, Request::Response response)
-    {
-        std::unique_ptr<InputStream> input(url.createInputStream(hasFields, nullptr, nullptr, stringPairArrayToHeaderString(headers), 0, &response.headers, &response.status, 5, verb));
-        response.result = checkInputStream(input);
-
-        if (response.result.failed()) return response;
-
-        response.bodyAsString = input->readEntireStreamAsString();
-        response.result = JSON::parse(response.bodyAsString, response.body);
-
-        return response;
-    }*/
-
     void setUrl(const String& endpoint) {
         url = url.withNewSubPath(endpoint);
     }
@@ -112,7 +79,7 @@ public:
     void attachFile(URL& url, File& file)
     {
         DBG("Uploading file ");
-        url = url.withFileToUpload(file.getFileName(), File(file.getFullPathName()), "audio/midi");
+        url = url.withFileToUpload("myfile", file, "audio/midi");
         DBG(file.getFileName());
         /*MemoryBlock mb = MemoryBlock();
 
@@ -121,28 +88,16 @@ public:
             url = url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
             DBG("FILE SENT");
         }
-        */
-
-
-
-        /*if (file.loadFileAsData(mb))
-        {
-            url = url.withDataToUpload("Midi File to continue", file.getFileName(), mb, "audio/midi");
-            DBG(String(mb.getSize()));
-            DBG(file.getFileName());
-            DBG(getUrl().getDomain());
-            DBG(getUrl().getParameterNames()[1]);
-            DBG("FILE SENT");
-
-        }
         else
         {
             DBG("Error in copying file into the buffer");
         }*/
     }
 
-    void manageDownload(File& file) {
-        std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file);
+    void manageDownload(File& file) {//, bool hasFields) {
+
+        URL::DownloadTaskOptions options;
+        std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file); // , options.withUsePost(hasFields));// , options.withUsePost(true));
 
         if (downloadptr)
         {

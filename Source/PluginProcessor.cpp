@@ -16,14 +16,11 @@ WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
 
         std::make_unique<AudioParameterBool>(NAME_EXPLORE, "Find your module", DEFAULT_ACTIVE),
         })
-{
-  
+{  
     parameters.addParameterListener(NAME_UNC_REQUEST, this);
     parameters.addParameterListener(NAME_COND_REQUEST, this);
     parameters.addParameterListener(NAME_SERVER, this);
     parameters.addParameterListener(NAME_PRIMER_SECONDS, this);
-
-
 }
 
 WritersBlockResolverAudioProcessor::~WritersBlockResolverAudioProcessor()
@@ -147,23 +144,6 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
 
     
 }
-
-/*void WritersBlockResolverAudioProcessor::startServer()
-{
-    if (server.start("python -m writers_block_resolver.server ./Transformer/unconditional_model_16.ckpt"))
-    {
-        while (server.isRunning())
-        {
-            DBG("Server is switched-on");
-            DBG(server.readAllProcessOutput());
-        }
-    }
-    else
-    {
-        DBG("Error in opening server");
-    }
-
-}*/
 
 
 //==============================================================================
