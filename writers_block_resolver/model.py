@@ -100,10 +100,10 @@ class Model:
             'C major scale': '/content/c_major_scale.mid',
             'Clair de Lune': '/content/clair_de_lune.mid',
         }"""
-        print(os.path.join(midiFile, ""))
-        print(os.path.exists(midiFile))
+        #print(os.path.join(midiFile, ""))
+        #print(os.path.exists(midiFile))
         #'C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/tt-942969/Transformer/c_major_scale.mid'  # @param ['C major arpeggio', 'C major scale', 'Clair de Lune', 'Upload your own!']
-        self.primer_ns = note_seq.midi_file_to_note_sequence(midiFile)    #filenames[primer]
+        self.primer_ns = note_seq.midi_to_note_sequence(midiFile)    #filenames[primer]
 
         # Handle sustain pedal in the primer.
         self.primer_ns = note_seq.apply_sustain_control_changes(self.primer_ns)

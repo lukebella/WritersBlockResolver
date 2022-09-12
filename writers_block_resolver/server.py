@@ -5,6 +5,7 @@ from cherrypy.lib.static import serve_file
 import os
 import sys
 import logging
+import tempfile
 
 class ModelServer():
 
@@ -40,20 +41,20 @@ class ModelServer():
     @cherrypy.expose
     def continuation(self, max_primer_seconds):#, myFile):
         logging.warning(max_primer_seconds)
-        logging.warning(str(cherrypy.request.body.read()))
-        midiFileToContinue = cherrypy.request.body.read()
+        #logging.warning(str(cherrypy.request.body.read()))
 
-        logging.warning(os.path.isfile(midiFileToContinue))
 
-        #midiFileToContinue = self.store(myFile)
-        if os.path.exists(midiFileToContinue):
-            #and (not(isinstance(midiFileToContinue, str))):
-            self.model.primingSequence(midiFileToContinue, max_primer_seconds)
-            cont = self.model.continuation()
-            logging.warning("Conditional sequence generated")
-            return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
-        else:
-            logging.warning("No file istance")
+        # cherrypy.request.body.read_into_file(midiFileToContinue)
+        b = cherrypy.request.body.fp.read()
+        logging.warning("%s", b)
+        #midiFileToContinue.write(b)
+        #midiFileToContinue.seek(0)
+        self.model.primingSequence(b, max_primer_seconds)
+
+
+        cont = self.model.continuation()
+        logging.warning("Conditional sequence generated")
+        return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
 
     @cherrypy.expose
     def shutdown(self):

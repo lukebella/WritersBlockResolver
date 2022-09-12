@@ -29,6 +29,7 @@ public:
 
     void sample()//const String& pathToSave)
     {
+
         DBG("LOAD termined. Starting SAMPLE...");
         request.setUrl(SAMPLE);
         pathToSave = whereToSave();

@@ -1,6 +1,8 @@
 #pragma once
 #include <JuceHeader.h>
 #include "Parameters.h"
+#include "FallbackDownloadTask.h"
+//#include "juce_core/network/juce_URL.h"
 
 class Request
 {
@@ -23,15 +25,18 @@ public:
 
     Request::Response execute(const String& operation, const String& pathToSave)
     {
+        //int test  = fields.getProperties().size();
         bool hasFields = (fields.getProperties().size() > 0);
         //non ho capito perchè senza questa dichiarazione, anche se hasFields non viene implementato in manageDownload, non funziona il download.
         //Ho provato ad assegnarlo a withUsePost di downloadToFile, ma non funziona ugualmente...
 
+        File file;
+
         DBG("init " + operation);
         file = File(pathToSave).getChildFile(operation + ".mid");
 
-        file.deleteFile();
         manageDownload(file);
+        //delete file;
 
         return response;
 
@@ -97,7 +102,12 @@ public:
     void manageDownload(File& file) {//, bool hasFields) {
 
         URL::DownloadTaskOptions options;
-        std::unique_ptr<URL::DownloadTask> downloadptr = url.downloadToFile(file); // , options.withUsePost(hasFields));// , options.withUsePost(true));
+        //std::unique_ptr<URL::DownloadTask> downloadptr (url.downloadToFile(file)); // , options.withUsePost(hasFields));// , options.withUsePost(true));
+        
+        std::unique_ptr<URL::DownloadTask> downloadptr(downloading(url, file, options));
+        
+        //gestire con un pop-up
+
 
         if (downloadptr)
         {
@@ -127,6 +137,30 @@ public:
 
     }
 
+    std::unique_ptr<URL::DownloadTask> downloading(const URL& urlToUse,
+        const File& targetFileToUse,
+        const URL::DownloadTaskOptions& options)
+    {
+        const size_t bufferSize = 0x8000;
+        targetFileToUse.deleteFile();
+
+        if (auto outputStream = targetFileToUse.createOutputStream(bufferSize))
+        {
+            auto stream = std::make_unique<WebInputStream>(urlToUse, options.usePost);
+            stream->withExtraHeaders(options.extraHeaders);
+            stream->withConnectionTimeout(30000);
+
+
+            if (stream->connect(nullptr))
+                return std::make_unique < FallbackDownloadTask > (std::move(outputStream),
+                    bufferSize,
+                    std::move(stream),
+                    options.listener);
+        }
+
+        return nullptr;
+    }
+
 protected:
 
     URL url;
@@ -136,7 +170,6 @@ protected:
     DynamicObject fields;
     String bodyAsString;
 
-    File file;
 
     
     Result checkInputStream(std::unique_ptr<InputStream>& input)
