@@ -135,6 +135,7 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
 
    if (paramID == NAME_SERVER)
        generate.openAndLoad();
+       //loader.run();
 
    if (paramID == NAME_PRIMER_SECONDS)
        generate.setPrimerSeconds(newValue);

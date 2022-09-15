@@ -120,7 +120,7 @@ void PluginEditor::resized()
     //[/UserResized]
 }
 
-
+*/
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 //[/MiscUserCode]
@@ -155,7 +155,7 @@ BEGIN_JUCER_METADATA
 
 END_JUCER_METADATA
 */
-//#endif
+#endif
 
 
 //[EndFile] You can add extra defines here...

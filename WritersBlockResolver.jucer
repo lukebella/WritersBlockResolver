@@ -7,13 +7,16 @@
   <MAINGROUP id="Fvyryz" name="WritersBlockResolver">
     <GROUP id="{E88A1C42-E5BD-98A1-3FF0-66B5B5706726}" name="Source">
       <FILE id="xOtBER" name="Explore.h" compile="0" resource="0" file="Source/Explore.h"/>
+      <FILE id="MDXzPz" name="Generate.cpp" compile="1" resource="0" file="Source/Generate.cpp"/>
       <FILE id="G1b4wY" name="Generate.h" compile="0" resource="0" file="Source/Generate.h"/>
       <FILE id="FDkgL0" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
       <FILE id="or8U5U" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="mDzk4e" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="WaRuSN" name="Request.cpp" compile="1" resource="0" file="Source/Request.cpp"/>
       <FILE id="hhaLBN" name="Request.h" compile="0" resource="0" file="Source/Request.h"/>
+      <FILE id="TcXezu" name="Thread.h" compile="0" resource="0" file="Source/Thread.h"/>
     </GROUP>
     <FILE id="ouH7I5" name="PluginEditor.cpp" compile="1" resource="0"
           file="Source/PluginEditor.cpp"/>

@@ -10,6 +10,7 @@
 #define NAME_COND_REQUEST "HTTPCondRequest"
 #define DEFAULT_DISABLED 0
 #define PRIMER_SECONDS 20
+#define CONNECTION_TIMEOUT 50000
 
 
 #define LOAD "load"
