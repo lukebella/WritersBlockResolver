@@ -56,19 +56,21 @@ void Request::attachParam(const String& paramName, const int& paramValue ) {
 void Request::attachFile(URL& url, File& file)
 {
     DBG("Uploading file ");
-    url = url.withFileToUpload("myfile", file, "audio/midi");
+    //url = url.withFileToUpload("myfile", file, "audio/midi");
     DBG(file.getFileName());
-    /*MemoryBlock mb = MemoryBlock();
+    MemoryBlock mb = MemoryBlock();
 
     if (file.loadFileAsData(mb))
     {
         url = url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
+        DBG(mb.toString());
+        DBG(mb.getSize());
         DBG("FILE SENT");
     }
     else
     {
         DBG("Error in copying file into the buffer");
-    }*/
+    }
 }
 
 void Request::manageDownload(File& file) {//, bool hasFields) {
@@ -78,8 +80,6 @@ void Request::manageDownload(File& file) {//, bool hasFields) {
         
     std::unique_ptr<URL::DownloadTask> downloadptr(downloading(url, file, options));
         
-    //gestire con un pop-up
-
 
     if (downloadptr)
     {

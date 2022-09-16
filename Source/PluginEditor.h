@@ -35,7 +35,8 @@
 
     Describe your class and how it works here!
                                                                     //[/Comments]
-
+*/
+/*
 class PluginEditor  : public juce::AudioProcessorEditor
 {
 public:

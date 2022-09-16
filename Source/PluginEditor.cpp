@@ -20,12 +20,12 @@
 //[Headers] You can add your own extra header files here...
 //[/Headers]
 
-/*#include "PluginEditor.h"
+//#include "PluginEditor.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
-
+/*
 //==============================================================================
 PluginEditor::PluginEditor ()
 {
@@ -120,12 +120,11 @@ void PluginEditor::resized()
     //[/UserResized]
 }
 
-*/
+
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 //[/MiscUserCode]
-
-
+*/
 //==============================================================================
 #if 0
 /*  -- Projucer information section --
