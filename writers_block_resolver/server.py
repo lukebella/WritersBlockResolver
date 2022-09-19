@@ -5,7 +5,7 @@ from cherrypy.lib.static import serve_file
 import os
 import sys
 import logging
-import json
+import base64
 
 class ModelServer():
 
@@ -41,32 +41,23 @@ class ModelServer():
 
 
     @cherrypy.expose
-    def continuation(self, max_primer_seconds):#, myFile):
-        logging.warning(max_primer_seconds)
+    def continuation(self, myfile, max_primer_seconds):
+        logging.warning("max_primer_seconds: %s", max_primer_seconds)
+        logging.warning("myfile: %s", myfile)
+        midifile = base64.b64decode(myfile)
+
+
         #logging.warning(str(cherrypy.request.body.read()))
         #logging.warning(cherrypy.serving.request)
         #local = cherrypy.lib.httputil.Host('127.0.0.1', 80, '127.0.0.1')
         #remote = cherrypy.lib.httputil.Host('127.0.0.1', 1111, '127.0.0.1')
 
-        req = cherrypy._cprequest.Request(self.local, self.remote)
-        logging.warning(req.config)
-        logging.warning(req.body)
-        logging.warning("processors ", cherrypy.request.body.processors)
 
-        #httpReq = cherrypy._cprequest._cpreqbody.Entity
-        #logging.warning("parts", httpReq.parts)
-
-
-        # cherrypy.request.body.read_into_file(midiFileToContinue)
-
-        b = cherrypy.request.body.fp.read()
-        logging.warning("%s", b)
-        #midiFileToContinue.write(b)
-        #midiFileToContinue.seek(0)
-        self.model.primingSequence(b, max_primer_seconds)
+        self.model.primingSequence(midifile, max_primer_seconds)
 
 
         cont = self.model.continuation()
+        #cont = base64.b64encode(cont)
         logging.warning("Conditional sequence generated")
         return serve_file(cont, "audio/midi", "attachment", "Conditional Midi File")
 

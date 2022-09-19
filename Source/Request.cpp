@@ -9,6 +9,7 @@ Request::Response Request::execute(const String& operation, const String& pathTo
     File file;
     DBG("init " + operation);
     file = File(pathToSave).getChildFile(operation + ".mid");
+
     manageDownload(file);
     return response;
 
@@ -48,8 +49,11 @@ URL Request::getUrl() {
     return url;
 }
 
+
+//midi->bin->
 void Request::attachParam(const String& paramName, const int& paramValue ) {
     DBG("Attach parameters...");
+    url = URL(url.toString(false));
     url = url.withParameter(paramName, String(paramValue));
 }
 
@@ -62,9 +66,13 @@ void Request::attachFile(URL& url, File& file)
 
     if (file.loadFileAsData(mb))
     {
-        url = url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
-        DBG(mb.toString());
-        DBG(mb.getSize());
+        //url = url.withDataToUpload("myfile", file.getFileName(), mb, "audio/midi");
+        //url = url.withPOSTData(mb);
+        String s = Base64::toBase64(mb.getData(), mb.getSize());
+        DBG("Sending file: "<<s);
+
+        url = url.withParameter("myfile", s);
+       
         DBG("FILE SENT");
     }
     else
@@ -76,12 +84,15 @@ void Request::attachFile(URL& url, File& file)
 void Request::manageDownload(File& file) {//, bool hasFields) {
 
     URL::DownloadTaskOptions options;
+    options.withUsePost(true);
     //std::unique_ptr<URL::DownloadTask> downloadptr (url.downloadToFile(file)); // , options.withUsePost(hasFields));// , options.withUsePost(true));
         
-    std::unique_ptr<URL::DownloadTask> downloadptr(downloading(url, file, options));
-        
+    //std::unique_ptr<URL::DownloadTask> downloadptr(downloading(url, file, options));
+    
+    String risposta = url.readEntireTextStream(true);
 
-    if (downloadptr)
+    DBG(risposta);
+    /*if (downloadptr)
     {
         while (downloadptr->isFinished() == false)
         {
@@ -89,17 +100,21 @@ void Request::manageDownload(File& file) {//, bool hasFields) {
             Thread::sleep(500);
         }
 
-        if (!downloadptr->hadError())
+        if (downloadptr->statusCode()==200) 
         {
             DBG("Downloaded ok\n");
+            DBG(downloadptr->getTotalLength());
         }
         else
-            DBG("Download failed\n");
+        {
+            
+            DBG("Download failed: "<<downloadptr->statusCode());
+        }
     }
     else
     {
         DBG("No download pointer");
-    }
+    }*/
 }
 
 
@@ -115,13 +130,17 @@ std::unique_ptr<URL::DownloadTask> Request::downloading(const URL& urlToUse,
 {
     const size_t bufferSize = 0x8000;
     targetFileToUse.deleteFile();
+    options.withUsePost(true);
+
+    
+
+    DBG("Post: "<<BoolToString(options.usePost));
 
     if (auto outputStream = targetFileToUse.createOutputStream(bufferSize))
     {
-        auto stream = std::make_unique<WebInputStream>(urlToUse, options.usePost);
+        auto stream = std::make_unique<WebInputStream>(urlToUse, true);// options.usePost);
         stream->withExtraHeaders(options.extraHeaders);
         stream->withConnectionTimeout(CONNECTION_TIMEOUT);
-
 
         if (stream->connect(nullptr))
             return std::make_unique < FallbackDownloadTask > (std::move(outputStream),
@@ -129,7 +148,6 @@ std::unique_ptr<URL::DownloadTask> Request::downloading(const URL& urlToUse,
                 std::move(stream),
                 options.listener);
     }
-
     return nullptr;
 }
 

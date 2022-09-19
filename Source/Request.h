@@ -72,6 +72,11 @@ protected:
         return result;
     }
 
+    String BoolToString(bool value)
+    {
+        return value ? "true": "false";
+    }
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Request);
 
 };

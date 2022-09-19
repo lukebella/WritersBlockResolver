@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "Request.h"
 #include "Parameters.h"
+#include "Thread.h"
 
 class Generate {
 
@@ -11,11 +12,11 @@ public:
     Generate();
     ~Generate();
 
-    void unconditional(float newValue);
+    void unconditional();
 
     void sample();//const String& pathToSave)
 
-    void processCond(float newValue);
+    void processCond();
 
     void nullRequest(Request::Response response);
 
@@ -33,14 +34,22 @@ public:
 
     void setPrimerSeconds(int newValue);
 
+    std::unique_ptr<URL::DownloadTask> Generate::downloading(const URL& urlToUse,
+        const File& targetFileToUse,
+        const URL::DownloadTaskOptions& options);
+
 private:
 
     Request request;
     Request::Response response;
     bool transLoaded = false;
+    bool cond = false;
     String pathToSave;
     File midiFile;
     int maxPrimerSeconds = PRIMER_SECONDS;
+
+    //LoadThread loader;
+    //SampleThread sampler;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Generate);
 

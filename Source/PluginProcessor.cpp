@@ -128,10 +128,10 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
 {
 
    if (paramID == NAME_UNC_REQUEST) 
-      generate.unconditional(newValue);
+      generate.unconditional();
 
    if (paramID == NAME_COND_REQUEST)
-       generate.processCond(newValue);
+       generate.processCond();
 
    if (paramID == NAME_SERVER)
        generate.openAndLoad();

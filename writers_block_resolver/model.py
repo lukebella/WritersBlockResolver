@@ -84,7 +84,7 @@ class Model:
         self.decode_length = 1024
         sample_ids = next(self.unconditional_samples)['outputs']
         #print(sample_ids) usare log cherrypy
-        print("Sequence generated")
+        logging.warning("Sequence generated")
 
         # Decode to NoteSequence.
         midi_filename = self.decode(sample_ids, encoder=self.unconditional_encoders['targets'])
@@ -109,16 +109,16 @@ class Model:
         self.primer_ns = note_seq.apply_sustain_control_changes(self.primer_ns)
 
         # Trim to desired number of seconds.
-        self.max_primer_seconds = max_primer_seconds  # @param {type:"slider", min:1, max:120}
-        logging.warning("max_prim_sec=", self.max_primer_seconds)
+        self.max_primer_seconds = int(max_primer_seconds)  # @param {type:"slider", min:1, max:120}
+        logging.warning("max_prim_sec=%d", self.max_primer_seconds)
         if self.primer_ns.total_time > self.max_primer_seconds:
-            print('Primer is longer than %d seconds, truncating.' % self.max_primer_seconds)
-            primer_ns = note_seq.extract_subsequence(
+            logging.warning('Primer is longer than %d seconds, truncating.' % self.max_primer_seconds)
+            self.primer_ns = note_seq.extract_subsequence(
                 self.primer_ns, 0, self.max_primer_seconds)
 
         # Remove drums from primer if present.
         if any(note.is_drum for note in self.primer_ns.notes):
-            print('Primer contains drums; they will be removed.')
+            logging.warning('Primer contains drums; they will be removed.')
             notes = [note for note in self.primer_ns.notes if not note.is_drum]
             del self.primer_ns.notes[:]
             self.primer_ns.notes.extend(notes)
@@ -143,14 +143,14 @@ class Model:
         # Remove the end token from the encoded primer.
         self.targets = self.targets[:-1]
 
-        decode_length = max(0, 4096 - len(self.targets))
+        self.decode_length = max(0, 4096 - len(self.targets))
         if len(self.targets) >= 4096:
-            print('Primer has more events than maximum sequence length; nothing will be generated.')
+            logging.warning('Primer has more events than maximum sequence length; nothing will be generated.')
 
         # Generate sample events.
         sample_ids = next(self.unconditional_samples)['outputs']
 
-        print(sample_ids)
+        logging.warning(sample_ids)
         # Decode to NoteSequence.
         midi_filename = self.decode(
             sample_ids,
@@ -160,18 +160,12 @@ class Model:
         # Append continuation to primer.
         continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
 
-        note_seq.sequence_proto_to_midi_file(continuation_ns, '/tmp/continuation.mid')
-        """
-        continuation_ns = note_seq.concatenate_sequences([self.primer_ns, ns])
-        print(continuation_ns)"""
-        print("Continuation generated")
-        return continuation_ns   #I don't think it's MIDI, do note_seq.sequence_proto_to_midi_file instead? Or decoding after concatenating?
+        mf = os.path.join(os.path.dirname(midi_filename), "cont.mid")
+        note_seq.sequence_proto_to_midi_file(continuation_ns, mf)
 
+        logging.warning("Continuation generated")
+        return mf
 
-
-"""def copy_dir(midi_filename):
-    dest = os.path.join(os.getcwd(), "MIDI_file.mid")
-    shutil.copy(midi_filename, dest)
 
 if __name__ == '__main__':
     model = Model().load('C:/Users/lenovo/Tesi/prova/Transformer/unconditional_model_16.ckpt')
