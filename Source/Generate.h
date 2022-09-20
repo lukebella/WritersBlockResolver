@@ -14,25 +14,21 @@ public:
 
     void unconditional();
 
-    void sample();//const String& pathToSave)
+    void sample();
 
     void processCond();
 
-    void nullRequest(Request::Response response);
-
     void openAndLoad();
-
-    void closeConn();
 
     String whereToSave();
 
     void setTransLoaded(bool newTrans);
     
-    void initialize(const String& domain); 
-
     File findMidi();
 
     void setPrimerSeconds(int newValue);
+
+    void requestForDownload(URL& url, File& file);
 
     std::unique_ptr<URL::DownloadTask> Generate::downloading(const URL& urlToUse,
         const File& targetFileToUse,
@@ -40,8 +36,6 @@ public:
 
 private:
 
-    Request request;
-    Request::Response response;
     bool transLoaded = false;
     bool cond = false;
     String pathToSave;
@@ -55,7 +49,4 @@ private:
 
 };
 
-
-//caricare file midi 
-//caricare la risposta 
 //trascinare da e verso la daw

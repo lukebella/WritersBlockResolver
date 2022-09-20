@@ -8,9 +8,23 @@ void Generate::unconditional()
 {
     if (transLoaded)
     {
-
         DBG("Starting sample");
-        sample();
+        cond = true;
+        pathToSave = whereToSave();
+        DBG("LOAD termined. Starting SAMPLE...");
+        File file;
+        file = File(pathToSave).getChildFile("continuation.mid");
+        if (!cond)
+        {
+            return;
+        }
+        else
+        {
+            auto url = URL("http://127.0.0.1:8080");
+            url = url.withNewSubPath(SAMPLE);
+            requestForDownload(url, file);
+            DBG("/SAMPLE");
+        }
     }
 
     else
@@ -19,18 +33,7 @@ void Generate::unconditional()
         // nullRequest(response);
     }
 }
-
-void Generate::sample()//const String& pathToSave)
-{
-
-    DBG("LOAD termined. Starting SAMPLE...");
-    request.setUrl(SAMPLE);
-    pathToSave = whereToSave();
-    response = request.execute(SAMPLE, pathToSave);
-    DBG("/SAMPLE");
-    /*if (response.result.failed())
-        nullRequest(response);*/
-}
+ 
 
 
 void Generate::processCond()
@@ -51,53 +54,18 @@ void Generate::processCond()
         else
         {
             auto url = URL("http://127.0.0.1:8080");
-
             url = url.withNewSubPath(CONTINUATION);
             DBG(midiFile.getFileName());
-            //DBG("LOAD termined. Starting CONTINUATION...");
-            //request.setUrl(CONTINUATION);
-            //request.attachFile(request.getUrl(), midiFile);
             MemoryBlock mb = MemoryBlock();
-
-            midiFile.loadFileAsData(mb);
-            
+            midiFile.loadFileAsData(mb);  
             String s = Base64::toBase64(mb.getData(), mb.getSize());
             DBG("Sending file: " << s);
-
             url = url.withParameter("myfile", s);
             DBG("size: " << mb.getSize());
             url = url.withParameter("max_primer_seconds", String(maxPrimerSeconds));
             DBG(url.toString(true));
-
-            //response = request.execute(CONTINUATION, pathToSave);
-            //String risposta = url.readEntireTextStream(true);
-            
-            URL::DownloadTaskOptions options;
-            options.withUsePost(true);
-            std::unique_ptr<URL::DownloadTask> downloadptr(downloading(url, file, options));
-            if (downloadptr)
-            {
-                while (downloadptr->isFinished() == false)
-                {
-                    DBG("Downloading...\n");
-                    Thread::sleep(500);
-                }
-
-                if (downloadptr->statusCode()==200)
-                {
-                    DBG("Downloaded ok\n");
-                    DBG(downloadptr->getTotalLength());
-                }
-                else
-                {
-
-                    DBG("Download failed: "<<downloadptr->statusCode());
-                }
-            }
-            else
-            {
-                DBG("No download pointer");
-            }
+          
+            requestForDownload(url, file);
 
             DBG("/CONTINUATION");
         }
@@ -107,11 +75,41 @@ void Generate::processCond()
 }
 
 
-void Generate::nullRequest(Request::Response response) {
 
-    DBG("Richiesta non eseguita");
-    closeConn();
+
+
+
+void Generate::requestForDownload(URL& url, File& file) {
+
+    URL::DownloadTaskOptions options;
+    options.withUsePost(true);
+    std::unique_ptr<URL::DownloadTask> downloadptr(downloading(url, file, options));
+    if (downloadptr)
+    {
+        while (downloadptr->isFinished() == false)
+        {
+            DBG("Downloading...\n");
+            Thread::sleep(500);
+        }
+
+        if (downloadptr->statusCode() == 200)
+        {
+            DBG("Downloaded ok\n");
+            DBG(downloadptr->getTotalLength());
+        }
+        else
+        {
+
+            DBG("Download failed: " << downloadptr->statusCode());
+        }
+    }
+    else
+    {
+        DBG("No download pointer");
+    }
+
 }
+
 
 std::unique_ptr<URL::DownloadTask> Generate::downloading(const URL& urlToUse,
     const File& targetFileToUse,
@@ -140,25 +138,17 @@ void Generate::openAndLoad()
 {
     if (!transLoaded)
     {
-        request.setUrl(LOAD);
-        DBG(request.getUrl().getDomain());
+        auto url = URL("http://127.0.0.1:8080");
+        url = url.withNewSubPath(LOAD);
+        DBG(url.getDomain());
         DBG("Starting LOAD");
-        response = request.execute();
-        //se modulo caricato dirlo con un flag
-        // 
-        if (response.result == Result::ok())
-            setTransLoaded(true);
+        url = url.readEntireTextStream();
+        setTransLoaded(true);
     }
 }
 
 
-void Generate::closeConn()
-{
-    request.setUrl(SHUTDOWN);
-    auto nullResponse = request.execute();
-    setTransLoaded(false);
-    DBG("SHUTDOWN");
-}
+
    
 
 String Generate::whereToSave()
@@ -178,28 +168,14 @@ String Generate::whereToSave()
     }
 
 }
-/*void sendFile(File& midiFile)
-{
-    request.setUrl("http://127.0.0.1:8080/store");
-    request.attachFile(request.getUrl(), midiFile);
-    DBG(midiFile.getFileName());
-    response = request.execute("STORE");
-    if (response.result == Result::ok())
-        DBG("File sent.");
-    else
-        nullRequest(response);
-}
-*/
+
 
 void Generate::setTransLoaded(bool newTrans)
 {
     transLoaded = newTrans;
 }
 
-void Generate::initialize(const String& domain) {
-    request.init(domain);
-    //?ckpt_path='C:/Users/lenovo/Documents/JUCE_Projects/WritersBlockResolver/Transformer/unconditional_model_16.ckpt'
-}
+    
 
 File Generate::findMidi()
 {
