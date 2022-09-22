@@ -27,52 +27,52 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts)
+PluginEditor::PluginEditor (WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor(&p), processor(p), valueTreeState(vts)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    sampleButton.reset(new juce::TextButton("sample_button"));
-    addAndMakeVisible(sampleButton.get());
-    sampleButton->setButtonText(TRANS("Generate"));
-    sampleButton->setColour(juce::TextButton::buttonColourId, juce::Colour(0xff78850e));
+    sampleButton.reset (new juce::TextButton ("sample_button"));
+    addAndMakeVisible (sampleButton.get());
+    sampleButton->setButtonText (TRANS("Generate"));
+    sampleButton->setColour (juce::TextButton::buttonColourId, juce::Colour (0xff78850e));
 
-    sampleButton->setBounds(160, 224, 150, 24);
+    sampleButton->setBounds (160, 224, 150, 24);
 
-    continueButton.reset(new juce::TextButton("continue_button"));
-    addAndMakeVisible(continueButton.get());
-    continueButton->setButtonText(TRANS("Continue"));
-    continueButton->setColour(juce::TextButton::buttonColourId, juce::Colour(0xff6a1156));
+    continueButton.reset (new juce::TextButton ("continue_button"));
+    addAndMakeVisible (continueButton.get());
+    continueButton->setButtonText (TRANS("Continue"));
+    continueButton->setColour (juce::TextButton::buttonColourId, juce::Colour (0xff6a1156));
 
-    continueButton->setBounds(480, 304, 150, 24);
+    continueButton->setBounds (480, 304, 150, 24);
 
-    maxPrimSecSlider.reset(new juce::Slider("max_primer_seconds_slider"));
-    addAndMakeVisible(maxPrimSecSlider.get());
-    maxPrimSecSlider->setRange(0, 10, 0);
-    maxPrimSecSlider->setSliderStyle(juce::Slider::LinearHorizontal);
-    maxPrimSecSlider->setTextBoxStyle(juce::Slider::TextBoxLeft, false, 80, 20);
+    maxPrimSecSlider.reset (new juce::Slider ("max_primer_seconds_slider"));
+    addAndMakeVisible (maxPrimSecSlider.get());
+    maxPrimSecSlider->setRange (0, 10, 0);
+    maxPrimSecSlider->setSliderStyle (juce::Slider::LinearHorizontal);
+    maxPrimSecSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
 
-    maxPrimSecSlider->setBounds(376, 200, 256, 24);
+    maxPrimSecSlider->setBounds (376, 200, 256, 24);
 
-    juce__component.reset(new juce::Component());
-    addAndMakeVisible(juce__component.get());
-    juce__component->setName("new component");
+    juce__component.reset (new juce::Component());
+    addAndMakeVisible (juce__component.get());
+    juce__component->setName ("new component");
 
-    juce__component->setBounds(288, 320, 150, 24);
+    juce__component->setBounds (288, 320, 150, 24);
 
-    juce__component2.reset(new juce::Component());
-    addAndMakeVisible(juce__component2.get());
-    juce__component2->setName("new component");
+    juce__component2.reset (new juce::Component());
+    addAndMakeVisible (juce__component2.get());
+    juce__component2->setName ("new component");
 
-    juce__component2->setBounds(480, 256, 150, 24);
+    juce__component2->setBounds (480, 256, 150, 24);
 
-    loadButton.reset(new juce::TextButton("Load button"));
-    addAndMakeVisible(loadButton.get());
-    loadButton->setButtonText(TRANS("Load"));
-    loadButton->setColour(juce::TextButton::buttonColourId, juce::Colour(0xffb50202));
+    loadButton.reset (new juce::TextButton ("Load button"));
+    addAndMakeVisible (loadButton.get());
+    loadButton->setButtonText (TRANS("Load"));
+    loadButton->setColour (juce::TextButton::buttonColourId, juce::Colour (0xffb50202));
 
-    loadButton->setBounds(384, 96, 144, 24);
+    loadButton->setBounds (384, 96, 144, 24);
 
 
     //[UserPreSize]
@@ -83,7 +83,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
 
     //[/UserPreSize]
 
-    setSize(750, 500);
+    setSize (750, 500);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -112,116 +112,116 @@ PluginEditor::~PluginEditor()
 }
 
 //==============================================================================
-void PluginEditor::paint(juce::Graphics& g)
+void PluginEditor::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll(juce::Colour(0xff103446));
+    g.fillAll (juce::Colour (0xff103446));
 
     {
         float x = 92.0f, y = 132.0f, width = 264.0f, height = 252.0f;
-        juce::Colour fillColour = juce::Colour(0xff15055c);
+        juce::Colour fillColour = juce::Colour (0xff15055c);
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour(fillColour);
-        g.fillRoundedRectangle(x, y, width, height, 10.000f);
+        g.setColour (fillColour);
+        g.fillRoundedRectangle (x, y, width, height, 10.000f);
     }
 
     {
         float x = 356.0f, y = 132.0f, width = 284.0f, height = 252.0f;
-        juce::Colour fillColour = juce::Colour(0xff070f04);
+        juce::Colour fillColour = juce::Colour (0xff070f04);
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour(fillColour);
-        g.fillRoundedRectangle(x, y, width, height, 10.000f);
+        g.setColour (fillColour);
+        g.fillRoundedRectangle (x, y, width, height, 10.000f);
     }
 
     {
         int x = 116, y = 172, width = 236, height = 44;
-        juce::String text(TRANS("Generate a MIDIsequence from zero!"));
-        //[UserPaintCustomArguments] Customize the painting arguments here..
-    //[/UserPaintCustomArguments]
-        g.setTiledImageFill(cachedImage__1,
-            0 - 116 + x,
-            0 - 172 + y,
-            1.0000f);
-        g.setFont(juce::Font("Yu Gothic UI", 17.00f, juce::Font::plain).withTypefaceStyle("Regular").withExtraKerningFactor(0.035f));
-        g.drawText(text, x, y, width, height,
-            juce::Justification::centred, true);
+        juce::String text (TRANS("Generate a MIDIsequence from zero!"));
+            //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setTiledImageFill (cachedImage__1,
+                         0 - 116 + x,
+                         0 - 172 + y,
+                         1.0000f);
+        g.setFont (juce::Font ("Yu Gothic UI", 17.00f, juce::Font::plain).withTypefaceStyle ("Regular").withExtraKerningFactor (0.035f));
+        g.drawText (text, x, y, width, height,
+                    juce::Justification::centred, true);
     }
 
     {
         int x = 388, y = 140, width = 236, height = 44;
-        juce::String text(TRANS("Continue your MIDISequence!"));
-        //[UserPaintCustomArguments] Customize the painting arguments here..
-    //[/UserPaintCustomArguments]
-        g.setTiledImageFill(cachedImage__2,
-            0 - 388 + x,
-            0 - 140 + y,
-            1.0000f);
-        g.setFont(juce::Font("Yu Gothic UI", 17.00f, juce::Font::plain).withTypefaceStyle("Regular").withExtraKerningFactor(0.035f));
-        g.drawText(text, x, y, width, height,
-            juce::Justification::centred, true);
+        juce::String text (TRANS("Continue your MIDISequence!"));
+            //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setTiledImageFill (cachedImage__2,
+                         0 - 388 + x,
+                         0 - 140 + y,
+                         1.0000f);
+        g.setFont (juce::Font ("Yu Gothic UI", 17.00f, juce::Font::plain).withTypefaceStyle ("Regular").withExtraKerningFactor (0.035f));
+        g.drawText (text, x, y, width, height,
+                    juce::Justification::centred, true);
     }
 
     {
         int x = 420, y = 172, width = 200, height = 30;
-        juce::String text(TRANS("Max Primer Seconds"));
-        //[UserPaintCustomArguments] Customize the painting arguments here..
-    //[/UserPaintCustomArguments]
-        g.setTiledImageFill(cachedImage__3,
-            0 - 420 + x,
-            0 - 172 + y,
-            0.5440f);
-        g.setFont(juce::Font(15.00f, juce::Font::plain).withTypefaceStyle("Regular").withExtraKerningFactor(0.061f));
-        g.drawText(text, x, y, width, height,
-            juce::Justification::centred, true);
+        juce::String text (TRANS("Max Primer Seconds"));
+            //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setTiledImageFill (cachedImage__3,
+                         0 - 420 + x,
+                         0 - 172 + y,
+                         0.5440f);
+        g.setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular").withExtraKerningFactor (0.061f));
+        g.drawText (text, x, y, width, height,
+                    juce::Justification::centred, true);
     }
 
     {
         int x = 268, y = 292, width = 200, height = 30;
-        juce::String text(TRANS("MIDI File generated"));
+        juce::String text (TRANS("MIDI File generated"));
         juce::Colour fillColour = juce::Colours::antiquewhite;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour(fillColour);
-        g.setFont(juce::Font(15.00f, juce::Font::plain).withTypefaceStyle("Regular"));
-        g.drawText(text, x, y, width, height,
-            juce::Justification::centred, true);
+        g.setColour (fillColour);
+        g.setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    juce::Justification::centred, true);
     }
 
     {
         int x = 444, y = 228, width = 212, height = 36;
-        juce::String text(TRANS("Drag Your sequence to continue it:"));
-        juce::Colour fillColour = juce::Colour(0xfffbfbfb);
+        juce::String text (TRANS("Drag Your sequence to continue it:"));
+        juce::Colour fillColour = juce::Colour (0xfffbfbfb);
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour(fillColour);
-        g.setFont(juce::Font(12.20f, juce::Font::plain).withTypefaceStyle("Regular"));
-        g.drawText(text, x, y, width, height,
-            juce::Justification::centred, true);
+        g.setColour (fillColour);
+        g.setFont (juce::Font (12.20f, juce::Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    juce::Justification::centred, true);
     }
 
     {
         float x = 92.0f, y = 92.0f, width = 544.0f, height = 40.0f;
-        juce::Colour fillColour = juce::Colour(0xff2aa0a5);
+        juce::Colour fillColour = juce::Colour (0xff2aa0a5);
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour(fillColour);
-        g.fillRoundedRectangle(x, y, width, height, 10.000f);
+        g.setColour (fillColour);
+        g.fillRoundedRectangle (x, y, width, height, 10.000f);
     }
 
     {
         int x = 100, y = 92, width = 236, height = 30;
-        juce::String text(TRANS("First, you need to load the model:"));
+        juce::String text (TRANS("First, you need to load the model:"));
         juce::Colour fillColour = juce::Colours::black;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour(fillColour);
-        g.setFont(juce::Font(15.00f, juce::Font::plain).withTypefaceStyle("Regular"));
-        g.drawText(text, x, y, width, height,
-            juce::Justification::centred, true);
+        g.setColour (fillColour);
+        g.setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+        g.drawText (text, x, y, width, height,
+                    juce::Justification::centred, true);
     }
 
     //[UserPaint] Add your own custom painting code here..

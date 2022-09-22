@@ -3,11 +3,11 @@
     //riuscire a creare un componente in cui compaia la file http response e trascinarlo nella daw
 
 #include "PluginProcessor.h"
-// #include "PluginEditor.h"
+#include "PluginEditor.h"
 #include "Parameters.h"
 //==============================================================================
 WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
-    parameters(*this, nullptr, "WBR_parameters", {
+    parameters(*this, nullptr, "WBRParameters", {
         std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterInt>(NAME_PRIMER_SECONDS, "Max Primer Seconds", 1, 120, PRIMER_SECONDS),
@@ -80,7 +80,6 @@ void WritersBlockResolverAudioProcessor::changeProgramName(int index, const juce
 //==============================================================================
 void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    //startServer();
 }
 
 void WritersBlockResolverAudioProcessor::releaseResources()
@@ -96,13 +95,13 @@ void WritersBlockResolverAudioProcessor::processBlock(juce::AudioBuffer<float>& 
 //==============================================================================
 bool WritersBlockResolverAudioProcessor::hasEditor() const
 {
-    return false; // (change this to false if you choose to not supply an editor)
+    return true; // (change this to false if you choose to not supply an editor)
 }
 
 juce::AudioProcessorEditor* WritersBlockResolverAudioProcessor::createEditor()
 {
-    //return new PluginEditor();
-    return nullptr;
+    return new PluginEditor(*this, parameters);
+    //return nullptr;
 
 }
 

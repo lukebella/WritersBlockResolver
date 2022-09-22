@@ -35,18 +35,18 @@ typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PluginEditor : public juce::AudioProcessorEditor
+class PluginEditor  : public juce::AudioProcessorEditor
 {
 public:
     //==============================================================================
-    PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts);
+    PluginEditor (WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts);
     ~PluginEditor() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint(juce::Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
 
 
@@ -75,7 +75,7 @@ private:
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };
 
 //[EndFile] You can add extra defines here...
