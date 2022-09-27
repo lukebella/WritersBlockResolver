@@ -1,4 +1,5 @@
 #include "Generate.h"
+#include "PluginEditor.h"
 
 Generate::Generate() {}
 Generate::~Generate() {}
@@ -20,7 +21,7 @@ void Generate::unconditional()
         }
         else
         {
-            auto url = URL("http://127.0.0.1:8080");
+            setURL("http://127.0.0.1:8080");
             url = url.withNewSubPath(SAMPLE);
             requestForDownload(url, file);
             DBG("/SAMPLE");
@@ -53,7 +54,7 @@ void Generate::processCond()
         }
         else
         {
-            auto url = URL("http://127.0.0.1:8080");
+            setURL("http://127.0.0.1:8080");
             url = url.withNewSubPath(CONTINUATION);
             DBG(midiFile.getFileName());
             MemoryBlock mb = MemoryBlock();
@@ -138,7 +139,7 @@ void Generate::openAndLoad()
 {
     if (!transLoaded)
     {
-        auto url = URL("http://127.0.0.1:8080");
+        setURL("http://127.0.0.1:8080");
         url = url.withNewSubPath(LOAD);
         DBG(url.getDomain());
         DBG("Starting LOAD");
@@ -202,6 +203,17 @@ File Generate::findMidi()
 void Generate::setPrimerSeconds(int newValue) {
     maxPrimerSeconds = newValue;
 }
+
+URL Generate::getUrl()
+{
+    return url;
+}
+
+void Generate::setURL(String newURL)
+{
+    url = URL(newURL);
+}
+
 
 //caricare file midi 
 //caricare la risposta 

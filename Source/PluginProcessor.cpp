@@ -1,4 +1,3 @@
-//caricare il server con comandi da terminale
 //con GUI non parte la generazione(com'è possibile?)
     //riuscire a creare un componente in cui compaia la file http response e trascinarlo nella daw
 
@@ -8,18 +7,16 @@
 //==============================================================================
 WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
     parameters(*this, nullptr, "WBRParameters", {
-        std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
-        std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
+        //std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
+        //std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
         std::make_unique<AudioParameterInt>(NAME_PRIMER_SECONDS, "Max Primer Seconds", 1, 120, PRIMER_SECONDS),
-
-        std::make_unique<AudioParameterBool>(NAME_SERVER, "Load Model", DEFAULT_DISABLED),
-
-        std::make_unique<AudioParameterBool>(NAME_EXPLORE, "Find your module", DEFAULT_ACTIVE),
+        
+        //std::make_unique<AudioParameterBool>(NAME_SERVER, "Load Model", DEFAULT_DISABLED),
         })
 {  
-    parameters.addParameterListener(NAME_UNC_REQUEST, this);
-    parameters.addParameterListener(NAME_COND_REQUEST, this);
-    parameters.addParameterListener(NAME_SERVER, this);
+    //parameters.addParameterListener(NAME_UNC_REQUEST, this);
+    //parameters.addParameterListener(NAME_COND_REQUEST, this);
+    //parameters.addParameterListener(NAME_SERVER, this);
     parameters.addParameterListener(NAME_PRIMER_SECONDS, this);
 }
 
@@ -85,7 +82,10 @@ void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int sa
 void WritersBlockResolverAudioProcessor::releaseResources()
 {
 }
-
+void WritersBlockResolverAudioProcessor::setRemote(String newRemote)
+{
+    remote = newRemote;
+}
 
 void WritersBlockResolverAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
@@ -100,7 +100,7 @@ bool WritersBlockResolverAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* WritersBlockResolverAudioProcessor::createEditor()
 {
-    return new PluginEditor(*this, parameters);
+    return new PluginEditor(*this);
     //return nullptr;
 
 }
@@ -131,11 +131,20 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
        generate.processCond();
 
    if (paramID == NAME_SERVER)
+   {
        generate.openAndLoad();
+       DBG("load: " << newValue);
+
+   }
+
        //loader.run();
 
    if (paramID == NAME_PRIMER_SECONDS)
+   {
        generate.setPrimerSeconds(newValue);
+       DBG("slider: " << newValue);
+   }
+    
   
    /*if (paramID == NAME_EXPLORE)
        explorer.findTransformer();*/
@@ -143,6 +152,24 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
     
 }
 
+void WritersBlockResolverAudioProcessor::setLoad(bool value)
+{
+    generate.setURL(remote);
+    if (value)
+      generate.openAndLoad();
+}
+void WritersBlockResolverAudioProcessor::setSample(bool value)
+{
+    generate.setURL(remote);
+    if (value)
+        generate.unconditional();
+}
+void WritersBlockResolverAudioProcessor::setCont(bool value)
+{
+    generate.setURL(remote);
+    if (value)
+        generate.processCond();
+}
 
 //==============================================================================
 // This creates new instances of the plugin..

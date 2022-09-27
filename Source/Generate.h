@@ -1,8 +1,8 @@
 
 #pragma once
 #include <JuceHeader.h>
-#include "Request.h"
 #include "Parameters.h"
+#include "FallbackDownloadTask.h"
 #include "Thread.h"
 
 class Generate {
@@ -13,8 +13,6 @@ public:
     ~Generate();
 
     void unconditional();
-
-    void sample();
 
     void processCond();
 
@@ -34,6 +32,12 @@ public:
         const File& targetFileToUse,
         const URL::DownloadTaskOptions& options);
 
+    URL getUrl();
+
+    void setURL(String newURL);
+
+    String getText();
+
 private:
 
     bool transLoaded = false;
@@ -41,7 +45,9 @@ private:
     String pathToSave;
     File midiFile;
     int maxPrimerSeconds = PRIMER_SECONDS;
+    URL url = URL();
 
+    
     //LoadThread loader;
     //SampleThread sampler;
 

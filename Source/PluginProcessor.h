@@ -43,6 +43,11 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+    void setLoad(bool value);
+    void setSample(bool value);
+    void setCont(bool value);
+
+    void setRemote(String newRemote);
 
 
 private:
@@ -50,6 +55,8 @@ private:
     void parameterChanged(const String& paramID, float newValue) override;
     AudioProcessorValueTreeState parameters;
     Generate generate;
+    bool l = false;
+    String remote = "";
     //LoadThread loader;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WritersBlockResolverAudioProcessor)

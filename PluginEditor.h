@@ -22,10 +22,10 @@
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "ButtonEvent.h"
 //[/Headers]
 
-typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
-typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
+
 
 //==============================================================================
 /**
@@ -39,7 +39,7 @@ class PluginEditor : public juce::AudioProcessorEditor
 {
 public:
     //==============================================================================
-    PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts);
+    PluginEditor(WritersBlockResolverAudioProcessor& p);
     ~PluginEditor() override;
 
     //==============================================================================
@@ -50,30 +50,34 @@ public:
     void resized() override;
 
 
+    Image smallCircleImage(
+        juce::Colour colour,
+        int imageWidth,
+        int imageHeight,
+        float radius,
+        bool clearImage,
+        juce::Image::PixelFormat format);
+
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]
     WritersBlockResolverAudioProcessor& processor;
-    AudioProcessorValueTreeState& valueTreeState;
-
-    std::unique_ptr<SliderAttachment> maxPrimerSecondsAttachment;
-    std::unique_ptr<ButtonAttachment> generateSampleAttachment;
-    std::unique_ptr<ButtonAttachment> generateContinuationAttachment;
-    std::unique_ptr<ButtonAttachment> loadAttachment;
 
     //==============================================================================
-    std::unique_ptr<juce::TextButton> sampleButton;
-    std::unique_ptr<juce::TextButton> continueButton;
     std::unique_ptr<juce::Slider> maxPrimSecSlider;
     std::unique_ptr<juce::Component> juce__component;
     std::unique_ptr<juce::Component> juce__component2;
-    std::unique_ptr<juce::TextButton> loadButton;
+    std::unique_ptr<juce::ImageButton> loadButton;
+    std::unique_ptr<juce::TextEditor> message;
+    std::unique_ptr<juce::TextEditor> serverURL;
+    std::unique_ptr<juce::ImageButton> sampleButton;
+    std::unique_ptr<juce::ImageButton> contButton;
+    std::unique_ptr<juce::ImageButton> cont_button;
     juce::Image cachedImage__1;
-    juce::Image cachedImage__2;
-    juce::Image cachedImage__3;
 
-
+    ButtonEvent be;
+    bool turnNext = true;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 };

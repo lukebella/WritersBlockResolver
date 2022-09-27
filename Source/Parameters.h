@@ -8,6 +8,8 @@
 
 #define NAME_UNC_REQUEST "HTTPUncRequest"
 #define NAME_COND_REQUEST "HTTPCondRequest"
+#define NAME_URL "ServerURL"
+#define NAME_MESSAGE "Message"
 #define DEFAULT_DISABLED 0
 #define PRIMER_SECONDS 20
 #define CONNECTION_TIMEOUT 50000
