@@ -1,5 +1,4 @@
 #include "Generate.h"
-#include "PluginEditor.h"
 
 Generate::Generate() {}
 Generate::~Generate() {}
@@ -37,7 +36,7 @@ void Generate::unconditional()
  
 
 
-void Generate::processCond()
+void Generate::processCond(String dragAndDropPath)
 {
         
     //CONTINUATION
@@ -45,7 +44,10 @@ void Generate::processCond()
     {
         cond = true;
         pathToSave = whereToSave();
-        midiFile = findMidi();
+        if (dragAndDropPath.contains(""))
+            midiFile = findMidi();
+        else
+            midiFile = dragAndDropPath;
         File file;
         file= File(pathToSave).getChildFile("continuation.mid");
         if (!cond)

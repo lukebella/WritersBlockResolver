@@ -48,7 +48,8 @@ public:
     void setCont(bool value);
 
     void setRemote(String newRemote);
-
+    
+    void setDragAndDropPath(String path);
 
 private:
 
@@ -56,6 +57,7 @@ private:
     AudioProcessorValueTreeState parameters;
     Generate generate;
     bool l = false;
+    String dragAndDropPath = "";
     String remote = "";
     //LoadThread loader;
     //==============================================================================

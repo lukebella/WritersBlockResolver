@@ -14,7 +14,7 @@ public:
 
     void unconditional();
 
-    void processCond();
+    void processCond(String dragAndDropPath);
 
     void openAndLoad();
 

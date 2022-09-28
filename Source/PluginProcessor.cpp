@@ -7,16 +7,11 @@
 //==============================================================================
 WritersBlockResolverAudioProcessor::WritersBlockResolverAudioProcessor():
     parameters(*this, nullptr, "WBRParameters", {
-        //std::make_unique<AudioParameterBool>(NAME_UNC_REQUEST, "Generate Unconditional Sequence", DEFAULT_DISABLED),
-        //std::make_unique<AudioParameterBool>(NAME_COND_REQUEST, "Generate Conditional Sequence", DEFAULT_DISABLED),
+
         std::make_unique<AudioParameterInt>(NAME_PRIMER_SECONDS, "Max Primer Seconds", 1, 120, PRIMER_SECONDS),
-        
-        //std::make_unique<AudioParameterBool>(NAME_SERVER, "Load Model", DEFAULT_DISABLED),
         })
 {  
-    //parameters.addParameterListener(NAME_UNC_REQUEST, this);
-    //parameters.addParameterListener(NAME_COND_REQUEST, this);
-    //parameters.addParameterListener(NAME_SERVER, this);
+
     parameters.addParameterListener(NAME_PRIMER_SECONDS, this);
 }
 
@@ -100,8 +95,7 @@ bool WritersBlockResolverAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* WritersBlockResolverAudioProcessor::createEditor()
 {
-    return new PluginEditor(*this);
-    //return nullptr;
+    return new PluginEditor(*this, parameters);
 
 }
 
@@ -122,34 +116,13 @@ void WritersBlockResolverAudioProcessor::setStateInformation(const void* data, i
 }
 
 void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID, float newValue)
-{
-
-   if (paramID == NAME_UNC_REQUEST) 
-      generate.unconditional();
-
-   if (paramID == NAME_COND_REQUEST)
-       generate.processCond();
-
-   if (paramID == NAME_SERVER)
-   {
-       generate.openAndLoad();
-       DBG("load: " << newValue);
-
-   }
-
-       //loader.run();
+{      
 
    if (paramID == NAME_PRIMER_SECONDS)
    {
        generate.setPrimerSeconds(newValue);
-       DBG("slider: " << newValue);
    }
-    
-  
-   /*if (paramID == NAME_EXPLORE)
-       explorer.findTransformer();*/
-
-    
+     
 }
 
 void WritersBlockResolverAudioProcessor::setLoad(bool value)
@@ -168,8 +141,14 @@ void WritersBlockResolverAudioProcessor::setCont(bool value)
 {
     generate.setURL(remote);
     if (value)
-        generate.processCond();
+        generate.processCond(dragAndDropPath);
 }
+
+void WritersBlockResolverAudioProcessor::setDragAndDropPath(String newPath)
+{
+    dragAndDropPath = newPath;
+}
+
 
 //==============================================================================
 // This creates new instances of the plugin..

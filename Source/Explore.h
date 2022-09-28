@@ -1,19 +1,14 @@
 
 #pragma once
 #include <JuceHeader.h>
-#include "Generate.h"
+#include "PluginProcessor.h"
 
-class Explore : public FileDragAndDropTarget
+class Explore : public FileDragAndDropTarget,
+                public Component
+                //public ComponentListener
 {
 
 public:
-
-    Explore() {}
-    ~Explore() {}
-
-    
-
-
 
     // for continuation (dragging from DAW to component)
     bool isInterestedInFileDrag(const StringArray& files) override
@@ -32,7 +27,7 @@ public:
     {
         if (isInterestedInFileDrag(files))
         {
-
+            processor.setDragAndDropPath(files[0]);
         }
     }
 
@@ -45,5 +40,7 @@ public:
 private:
 
     DragAndDropContainer recipient;
+    WritersBlockResolverAudioProcessor& processor;
+
 
 };
