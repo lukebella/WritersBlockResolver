@@ -8,6 +8,7 @@ void Generate::unconditional()
 {
     if (transLoaded)
     {
+
         DBG("Starting sample");
         cond = true;
         pathToSave = whereToSave();
@@ -33,12 +34,12 @@ void Generate::unconditional()
         // nullRequest(response);
     }
 }
- 
+
 
 
 void Generate::processCond(String dragAndDropPath)
 {
-        
+
     //CONTINUATION
     if (transLoaded)
     {
@@ -49,7 +50,7 @@ void Generate::processCond(String dragAndDropPath)
         else
             midiFile = dragAndDropPath;
         File file;
-        file= File(pathToSave).getChildFile("continuation.mid");
+        file = File(pathToSave).getChildFile("continuation.mid");
         if (!cond)
         {
             return;
@@ -60,14 +61,14 @@ void Generate::processCond(String dragAndDropPath)
             url = url.withNewSubPath(CONTINUATION);
             DBG(midiFile.getFileName());
             MemoryBlock mb = MemoryBlock();
-            midiFile.loadFileAsData(mb);  
+            midiFile.loadFileAsData(mb);
             String s = Base64::toBase64(mb.getData(), mb.getSize());
             DBG("Sending file: " << s);
             url = url.withParameter("myfile", s);
             DBG("size: " << mb.getSize());
             url = url.withParameter("max_primer_seconds", String(maxPrimerSeconds));
             DBG(url.toString(true));
-          
+
             requestForDownload(url, file);
 
             DBG("/CONTINUATION");
@@ -152,7 +153,7 @@ void Generate::openAndLoad()
 
 
 
-   
+
 
 String Generate::whereToSave()
 {
@@ -178,7 +179,7 @@ void Generate::setTransLoaded(bool newTrans)
     transLoaded = newTrans;
 }
 
-    
+
 
 File Generate::findMidi()
 {
@@ -215,6 +216,7 @@ void Generate::setURL(String newURL)
 {
     url = URL(newURL);
 }
+
 
 
 //caricare file midi 

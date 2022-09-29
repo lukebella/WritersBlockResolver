@@ -12,7 +12,7 @@
 #define NAME_MESSAGE "Message"
 #define DEFAULT_DISABLED 0
 #define PRIMER_SECONDS 20
-#define CONNECTION_TIMEOUT 80000
+#define CONNECTION_TIMEOUT 100000  //il mio pc è lento...
 
 
 #define LOAD "load"

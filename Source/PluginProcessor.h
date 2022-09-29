@@ -59,6 +59,7 @@ private:
     bool l = false;
     String dragAndDropPath = "";
     String remote = "";
+    String messageToEditor = "";
     //LoadThread loader;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WritersBlockResolverAudioProcessor)

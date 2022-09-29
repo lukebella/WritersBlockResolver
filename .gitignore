@@ -7,8 +7,11 @@ google-cloud-sdk
 
 *.drawio
 
-
+*.png
+*.svg
 *.ico
+
+readarg.py
 
 /uninstaller.exe
 /install_mode

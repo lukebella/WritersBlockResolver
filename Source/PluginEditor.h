@@ -36,7 +36,7 @@ typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PluginEditor : public juce::AudioProcessorEditor, 
+class PluginEditor : public juce::AudioProcessorEditor,
                      public Button::Listener,
                      public FileDragAndDropTarget,
                      public ComponentListener
@@ -63,10 +63,11 @@ public:
         bool clearImage,
         juce::Image::PixelFormat format);
 
-    bool PluginEditor::isInterestedInFileDrag(const StringArray& files) override;
-    void PluginEditor::filesDropped(const StringArray& files, int x, int y) override;
+    bool isInterestedInFileDrag(const StringArray& files) override;
+    void filesDropped(const StringArray& files, int x, int y) override;
 
-
+    //void fileDragEnter(const StringArray& files, int x, int y) override;
+    //void fileDragExit(const StringArray& files) override;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]

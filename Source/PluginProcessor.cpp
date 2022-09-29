@@ -76,6 +76,7 @@ void WritersBlockResolverAudioProcessor::prepareToPlay(double sampleRate, int sa
 
 void WritersBlockResolverAudioProcessor::releaseResources()
 {
+   
 }
 void WritersBlockResolverAudioProcessor::setRemote(String newRemote)
 {
@@ -120,7 +121,7 @@ void WritersBlockResolverAudioProcessor::parameterChanged(const String& paramID,
 
    if (paramID == NAME_PRIMER_SECONDS)
    {
-       generate.setPrimerSeconds(newValue);
+       generate.setPrimerSeconds(int(newValue));
    }
      
 }

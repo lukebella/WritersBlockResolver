@@ -27,18 +27,17 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p)
-    : AudioProcessorEditor(&p), processor(p)
+PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor(&p), processor(p), valueTreeState(vts)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
     maxPrimSecSlider.reset(new juce::Slider("max_primer_seconds_slider"));
     addAndMakeVisible(maxPrimSecSlider.get());
-    maxPrimSecSlider->setRange(0, 10, 0);
+    maxPrimSecSlider->setRange(1, 120, 0);
     maxPrimSecSlider->setSliderStyle(juce::Slider::LinearHorizontal);
     maxPrimSecSlider->setTextBoxStyle(juce::Slider::TextBoxLeft, false, 80, 20);
-
     maxPrimSecSlider->setBounds(376, 200, 256, 24);
 
     juce__component.reset(new juce::Component());
@@ -47,17 +46,23 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p)
 
     juce__component->setBounds(272, 424, 150, 24);
 
-    juce__component2.reset(new juce::Component());
-    addAndMakeVisible(juce__component2.get());
-    juce__component2->setName("new component");
-
-    juce__component2->setBounds(480, 256, 150, 24);
+    dragAndDropIn.reset(new juce::Component());
+    addAndMakeVisible(dragAndDropIn.get());
+    dragAndDropIn->setName("new component");
+    dragAndDropIn->setBounds(480, 256, 150, 24);
+    juce::Colour dragAndDropInColour = juce::Colour(0xff15055c);
+    if (dragAndDropIn->isMouseOverOrDragging())
+        dragAndDropIn->addComponentListener(this);
 
     loadButton.reset(new juce::ImageButton("Load Button"));
     addAndMakeVisible(loadButton.get());
     loadButton->setButtonText(TRANS("Load"));
 
-    auto offColour = getLookAndFeel().findColour(juce::Slider::ColourIds::rotarySliderFillColourId);
+    labelLoadButton.reset(new juce::Label());
+    addAndMakeVisible(labelLoadButton.get());
+    labelLoadButton->setText("LOAD", juce::NotificationType::dontSendNotification);
+    labelLoadButton->setBounds(364, 70, 44, 12);
+    auto offColour = getLookAndFeel().findColour(juce::Slider::ColourIds::textBoxHighlightColourId);
     auto onColour = getLookAndFeel().findColour(juce::Slider::ColourIds::textBoxOutlineColourId);
     float lineThick = 80.0f;
 
@@ -69,14 +74,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p)
         true, false, true, offImg, 1.0f, {}, onImg, 0.333f, {}, onImg, 1.0f, {}, 0.9f);
 
     loadButton->setBounds(344, 64, 88, 24);
-
-    if (loadButton->isDown())
-    {
-        p.setLoad(true);
-        DBG("Trying Load");
-
-    }
-
+    loadButton->addListener(this);
 
     loadButton->setRadioGroupId(1);
     message.reset(new juce::TextEditor("Message"));
@@ -100,33 +98,45 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p)
     serverURL->setScrollbarsShown(true);
     serverURL->setCaretVisible(true);
     serverURL->setPopupMenuEnabled(true);
-    serverURL->setText(juce::String());
+    serverURL->setText(juce::String("http://127.0.0.1:8080"));
 
     serverURL->setBounds(464, 96, 150, 24);
+    p.setRemote(serverURL->getText());
 
     sampleButton.reset(new juce::ImageButton("Sample Button"));
     addAndMakeVisible(sampleButton.get());
     sampleButton->setButtonText(TRANS("Generate"));
-
+    labelSampleButton.reset(new juce::Label());
+    addAndMakeVisible(labelLoadButton.get());
+    labelSampleButton->setText("SAMPLE", juce::NotificationType::dontSendNotification);
+    addAndMakeVisible(labelSampleButton.get());
+    labelSampleButton->setBounds(200, 220, 50, 12);
     sampleButton->setImages(
         true, false, true, offImg, 1.0f, {}, onImg, 0.333f, {}, onImg, 1.0f, {}, 0.9f);
 
     sampleButton->setBounds(160, 216, 150, 24);
     sampleButton->setRadioGroupId(1);
+    sampleButton->addListener(this);
+
 
     cont_button.reset(new juce::ImageButton("Cont Button"));
     addAndMakeVisible(cont_button.get());
     cont_button->setButtonText(TRANS("Generate"));
-
+    labelContButton.reset(new juce::Label());
+    addAndMakeVisible(labelContButton.get());
+    labelContButton->setText("CONTINUATION", juce::NotificationType::dontSendNotification);
+    addAndMakeVisible(labelContButton.get());
+    labelContButton->setBounds(456, 310, 100, 10);
     cont_button->setImages(
         true, false, true, offImg, 1.0f, {}, onImg, 0.333f, {}, onImg, 1.0f, {}, 0.9f);
     cont_button->setBounds(432, 304, 150, 24);
     cont_button->setRadioGroupId(1);
+    cont_button->addListener(this);
 
 
     //[UserPreSize]
-   /* maxPrimerSecondsAttachment.reset(new SliderAttachment(valueTreeState, NAME_PRIMER_SECONDS, *maxPrimSecSlider));
-    generateSampleAttachment.reset(new ButtonAttachment(valueTreeState, NAME_UNC_REQUEST, *sampleButton));
+    maxPrimSecAttachment.reset(new SliderAttachment(valueTreeState, NAME_PRIMER_SECONDS, *maxPrimSecSlider));
+    /*generateSampleAttachment.reset(new ButtonAttachment(valueTreeState, NAME_UNC_REQUEST, *sampleButton));
     generateContinuationAttachment.reset(new ButtonAttachment(valueTreeState, NAME_COND_REQUEST, *continueButton));
     loadAttachment.reset(new ButtonAttachment(valueTreeState, NAME_SERVER, *loadButton));*/
 
@@ -142,16 +152,27 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p)
 PluginEditor::~PluginEditor()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+    maxPrimSecAttachment.reset();
+
     //[/Destructor_pre]
+
+    maxPrimSecSlider->setLookAndFeel(nullptr);
+    juce__component->setLookAndFeel(nullptr);
+    dragAndDropIn->setLookAndFeel(nullptr);
+    loadButton->setLookAndFeel(nullptr);
+    message->setLookAndFeel(nullptr);
+    serverURL->setLookAndFeel(nullptr);
+    sampleButton->setLookAndFeel(nullptr);
+    cont_button->setLookAndFeel(nullptr);
+
 
     maxPrimSecSlider = nullptr;
     juce__component = nullptr;
-    juce__component2 = nullptr;
+    dragAndDropIn = nullptr;
     loadButton = nullptr;
     message = nullptr;
     serverURL = nullptr;
     sampleButton = nullptr;
-    contButton = nullptr;
     cont_button = nullptr;
 
 
@@ -314,7 +335,7 @@ void PluginEditor::resized()
     //[/UserResized]
 }
 
-Image PluginEditor::smallCircleImage(
+juce::Image PluginEditor::smallCircleImage(
     juce::Colour colour,
     int imageWidth,
     int imageHeight,
@@ -335,6 +356,42 @@ Image PluginEditor::smallCircleImage(
     return img;
 }
 
+void PluginEditor::buttonClicked(Button* b)
+{
+    if (b == loadButton.get())
+    {
+        DBG("LOAD");
+        processor.setLoad(true);
+    }
+    if (b == sampleButton.get())
+    {
+        processor.setSample(true);
+    }
+    if (b == cont_button.get())
+    {
+        processor.setCont(true);
+    }
+}
+
+bool PluginEditor::isInterestedInFileDrag(const StringArray& files)
+{
+    auto file_to_continue = files[0];
+    if (file_to_continue.contains("*.mid"))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+//for continuation(dragging from DAW to component)
+void PluginEditor::filesDropped(const StringArray& files, int x, int y)
+{
+    if (isInterestedInFileDrag(files))
+    {
+        processor.setDragAndDropPath(files[0]);
+    }
+}
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...

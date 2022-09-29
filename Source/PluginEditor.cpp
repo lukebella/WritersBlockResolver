@@ -38,8 +38,6 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     maxPrimSecSlider->setRange(1, 120, 0);
     maxPrimSecSlider->setSliderStyle(juce::Slider::LinearHorizontal);
     maxPrimSecSlider->setTextBoxStyle(juce::Slider::TextBoxLeft, false, 80, 20);
-    //p.setPrimerSeconds(static_cast<int>(maxPrimSecSlider->getValue()));
-
     maxPrimSecSlider->setBounds(376, 200, 256, 24);
 
     juce__component.reset(new juce::Component());
@@ -59,7 +57,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     loadButton.reset(new juce::ImageButton("Load Button"));
     addAndMakeVisible(loadButton.get());
     loadButton->setButtonText(TRANS("Load"));
-    
+
     labelLoadButton.reset(new juce::Label());
     addAndMakeVisible(labelLoadButton.get());
     labelLoadButton->setText("LOAD", juce::NotificationType::dontSendNotification);
@@ -77,8 +75,6 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
 
     loadButton->setBounds(344, 64, 88, 24);
     loadButton->addListener(this);
-    //loadButton->onClick = [1,loadButtonget()]() { p.setLoad(true); };
-
 
     loadButton->setRadioGroupId(1);
     message.reset(new juce::TextEditor("Message"));
@@ -114,7 +110,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     addAndMakeVisible(labelLoadButton.get());
     labelSampleButton->setText("SAMPLE", juce::NotificationType::dontSendNotification);
     addAndMakeVisible(labelSampleButton.get());
-    labelSampleButton->setBounds(200, 220, 100, 18);
+    labelSampleButton->setBounds(200, 220, 50, 12);
     sampleButton->setImages(
         true, false, true, offImg, 1.0f, {}, onImg, 0.333f, {}, onImg, 1.0f, {}, 0.9f);
 
@@ -130,7 +126,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     addAndMakeVisible(labelContButton.get());
     labelContButton->setText("CONTINUATION", juce::NotificationType::dontSendNotification);
     addAndMakeVisible(labelContButton.get());
-    labelContButton->setBounds(452, 305, 130, 20);
+    labelContButton->setBounds(456, 310, 100, 10);
     cont_button->setImages(
         true, false, true, offImg, 1.0f, {}, onImg, 0.333f, {}, onImg, 1.0f, {}, 0.9f);
     cont_button->setBounds(432, 304, 150, 24);
@@ -159,6 +155,15 @@ PluginEditor::~PluginEditor()
     maxPrimSecAttachment.reset();
 
     //[/Destructor_pre]
+
+    maxPrimSecSlider->setLookAndFeel(nullptr);
+    juce__component->setLookAndFeel(nullptr);
+    dragAndDropIn->setLookAndFeel(nullptr);
+    loadButton->setLookAndFeel(nullptr);
+    message->setLookAndFeel(nullptr);
+    serverURL->setLookAndFeel(nullptr);
+    sampleButton->setLookAndFeel(nullptr);
+    cont_button->setLookAndFeel(nullptr);
 
 
     maxPrimSecSlider = nullptr;
@@ -351,7 +356,7 @@ juce::Image PluginEditor::smallCircleImage(
     return img;
 }
 
-void PluginEditor::buttonClicked(Button* b) 
+void PluginEditor::buttonClicked(Button* b)
 {
     if (b == loadButton.get())
     {
@@ -368,7 +373,7 @@ void PluginEditor::buttonClicked(Button* b)
     }
 }
 
-bool PluginEditor::isInterestedInFileDrag(const StringArray& files)  
+bool PluginEditor::isInterestedInFileDrag(const StringArray& files)
 {
     auto file_to_continue = files[0];
     if (file_to_continue.contains("*.mid"))
@@ -387,6 +392,8 @@ void PluginEditor::filesDropped(const StringArray& files, int x, int y)
         processor.setDragAndDropPath(files[0]);
     }
 }
+
+
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 //[/MiscUserCode]
 

@@ -5,7 +5,7 @@
 #include "FallbackDownloadTask.h"
 #include "Thread.h"
 
-class Generate {
+class Generate : public Component{
 
 public:
 
@@ -21,7 +21,7 @@ public:
     String whereToSave();
 
     void setTransLoaded(bool newTrans);
-    
+
     File findMidi();
 
     void setPrimerSeconds(int newValue);
@@ -36,8 +36,6 @@ public:
 
     void setURL(String newURL);
 
-    String getText();
-
 private:
 
     bool transLoaded = false;
@@ -46,8 +44,6 @@ private:
     File midiFile;
     int maxPrimerSeconds = PRIMER_SECONDS;
     URL url = URL();
-
-    
     //LoadThread loader;
     //SampleThread sampler;
 
