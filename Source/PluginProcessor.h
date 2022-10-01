@@ -56,10 +56,10 @@ private:
     void parameterChanged(const String& paramID, float newValue) override;
     AudioProcessorValueTreeState parameters;
     Generate generate;
-    bool l = false;
+    //bool l = false;
     String dragAndDropPath = "";
     String remote = "";
-    String messageToEditor = "";
+    //String messageToEditor = "";
     //LoadThread loader;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WritersBlockResolverAudioProcessor)

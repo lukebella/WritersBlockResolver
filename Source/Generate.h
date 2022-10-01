@@ -5,7 +5,7 @@
 #include "FallbackDownloadTask.h"
 #include "Thread.h"
 
-class Generate : public Component{
+class Generate {        //}; : public Component {
 
 public:
 

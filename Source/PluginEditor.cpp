@@ -38,9 +38,9 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     maxPrimSecSlider->setRange(1, 120, 0);
     maxPrimSecSlider->setSliderStyle(juce::Slider::LinearHorizontal);
     maxPrimSecSlider->setTextBoxStyle(juce::Slider::TextBoxLeft, false, 80, 20);
-    maxPrimSecSlider->setBounds(376, 200, 256, 24);
+    maxPrimSecSlider->setBounds(376, 216, 256, 24);
 
-    juce__component.reset(new juce::Component());
+    /*juce__component.reset(new juce::Component());
     addAndMakeVisible(juce__component.get());
     juce__component->setName("new component");
 
@@ -52,7 +52,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     dragAndDropIn->setBounds(480, 256, 150, 24);
     juce::Colour dragAndDropInColour = juce::Colour(0xff15055c);
     if (dragAndDropIn->isMouseOverOrDragging())
-        dragAndDropIn->addComponentListener(this);
+        dragAndDropIn->addComponentListener(this);*/
 
     loadButton.reset(new juce::ImageButton("Load Button"));
     addAndMakeVisible(loadButton.get());
@@ -77,7 +77,8 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     loadButton->addListener(this);
 
     loadButton->setRadioGroupId(1);
-    message.reset(new juce::TextEditor("Message"));
+    
+    /*message.reset(new juce::TextEditor("Message"));
     addAndMakeVisible(message.get());
     message->setMultiLine(false);
     message->setReturnKeyStartsNewLine(false);
@@ -88,7 +89,7 @@ PluginEditor::PluginEditor(WritersBlockResolverAudioProcessor& p, AudioProcessor
     message->setText(juce::String());
     message->setReadOnly(true);
 
-    message->setBounds(272, 376, 150, 24);
+    message->setBounds(272, 376, 150, 24);*/
 
     serverURL.reset(new juce::TextEditor("Server URL"));
     addAndMakeVisible(serverURL.get());
@@ -157,20 +158,20 @@ PluginEditor::~PluginEditor()
     //[/Destructor_pre]
 
     maxPrimSecSlider->setLookAndFeel(nullptr);
-    juce__component->setLookAndFeel(nullptr);
-    dragAndDropIn->setLookAndFeel(nullptr);
+    //juce__component->setLookAndFeel(nullptr);
+    //dragAndDropIn->setLookAndFeel(nullptr);
     loadButton->setLookAndFeel(nullptr);
-    message->setLookAndFeel(nullptr);
+    //message->setLookAndFeel(nullptr);
     serverURL->setLookAndFeel(nullptr);
     sampleButton->setLookAndFeel(nullptr);
     cont_button->setLookAndFeel(nullptr);
 
 
     maxPrimSecSlider = nullptr;
-    juce__component = nullptr;
-    dragAndDropIn = nullptr;
+    //juce__component = nullptr;
+    //dragAndDropIn = nullptr;
     loadButton = nullptr;
-    message = nullptr;
+    //message = nullptr;
     serverURL = nullptr;
     sampleButton = nullptr;
     cont_button = nullptr;
@@ -231,7 +232,7 @@ void PluginEditor::paint(juce::Graphics& g)
     }
 
     {
-        int x = 420, y = 172, width = 200, height = 30;
+        int x = 420, y = 186, width = 200, height = 30;
         juce::String text(TRANS("Max Primer Seconds"));
         //[UserPaintCustomArguments] Customize the painting arguments here..
     //[/UserPaintCustomArguments]
@@ -239,12 +240,14 @@ void PluginEditor::paint(juce::Graphics& g)
             0 - 420 + x,
             0 - 172 + y,
             0.5440f);
+        juce::Colour fillColour = juce::Colours::aliceblue;
+        g.setColour(fillColour);
         g.setFont(juce::Font(15.00f, juce::Font::plain).withTypefaceStyle("Regular").withExtraKerningFactor(0.061f));
         g.drawText(text, x, y, width, height,
             juce::Justification::centred, true);
     }
 
-    {
+    /* {
         int x = 444, y = 228, width = 212, height = 36;
         juce::String text(TRANS("Drag Your sequence to continue it:"));
         juce::Colour fillColour = juce::Colour(0xfffbfbfb);
@@ -254,7 +257,7 @@ void PluginEditor::paint(juce::Graphics& g)
         g.setFont(juce::Font(12.20f, juce::Font::plain).withTypefaceStyle("Regular"));
         g.drawText(text, x, y, width, height,
             juce::Justification::centred, true);
-    }
+    }*/
 
     {
         float x = 92.0f, y = 52.0f, width = 544.0f, height = 76.0f;
@@ -277,16 +280,16 @@ void PluginEditor::paint(juce::Graphics& g)
             juce::Justification::centred, true);
     }
 
-    {
+    /* {
         float x = 92.0f, y = 364.0f, width = 548.0f, height = 92.0f;
         juce::Colour fillColour = juce::Colour(0xff43a52a);
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g.setColour(fillColour);
         g.fillRoundedRectangle(x, y, width, height, 10.000f);
-    }
+    }*/
 
-    {
+    /* {
         int x = 132, y = 372, width = 200, height = 30;
         juce::String text(TRANS("Message:"));
         juce::Colour fillColour = juce::Colours::black;
@@ -296,7 +299,7 @@ void PluginEditor::paint(juce::Graphics& g)
         g.setFont(juce::Font(15.00f, juce::Font::plain).withTypefaceStyle("Regular"));
         g.drawText(text, x, y, width, height,
             juce::Justification::centred, true);
-    }
+    }*/
 
     {
         int x = 324, y = 92, width = 200, height = 30;
@@ -310,7 +313,7 @@ void PluginEditor::paint(juce::Graphics& g)
             juce::Justification::centred, true);
     }
 
-    {
+    /* {
         int x = 100, y = 420, width = 200, height = 30;
         juce::String text(TRANS("MIDI Generated File:"));
         juce::Colour fillColour = juce::Colours::black;
@@ -320,7 +323,7 @@ void PluginEditor::paint(juce::Graphics& g)
         g.setFont(juce::Font(15.00f, juce::Font::plain).withTypefaceStyle("Regular"));
         g.drawText(text, x, y, width, height,
             juce::Justification::centred, true);
-    }
+    }*/
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -373,7 +376,7 @@ void PluginEditor::buttonClicked(Button* b)
     }
 }
 
-bool PluginEditor::isInterestedInFileDrag(const StringArray& files)
+/*bool PluginEditor::isInterestedInFileDrag(const StringArray& files)
 {
     auto file_to_continue = files[0];
     if (file_to_continue.contains("*.mid"))
@@ -382,16 +385,16 @@ bool PluginEditor::isInterestedInFileDrag(const StringArray& files)
     }
 
     return false;
-}
+}*/
 
 //for continuation(dragging from DAW to component)
-void PluginEditor::filesDropped(const StringArray& files, int x, int y)
+/*void PluginEditor::filesDropped(const StringArray& files, int x, int y)
 {
     if (isInterestedInFileDrag(files))
     {
         processor.setDragAndDropPath(files[0]);
     }
-}
+}*/
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...

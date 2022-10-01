@@ -13,12 +13,13 @@ class ModelServer():
         self.model = Model()
         self.ckpt_path = ckpt_path
         self.isLoaded = False
+        print("Server Started!")
 
 
     # read the uploaded file
     def store(self, myFile):
         return self.model.store(myFile)
-    #cherry http body
+    
 
 
     @cherrypy.expose
@@ -29,7 +30,6 @@ class ModelServer():
             self.isLoaded = True
             self.local = cherrypy._cprequest.Request.local
             self.remote = cherrypy._cprequest.Request.remote
-            logging.warning("Model loaded")
         return
 
 
@@ -70,4 +70,5 @@ class ModelServer():
 if __name__ == '__main__':
     os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
     cherrypy.quickstart(ModelServer(ckpt_path=sys.argv[1]))
+
 
