@@ -14,7 +14,7 @@ void Generate::unconditional()
         pathToSave = whereToSave();
         DBG("LOAD termined. Starting SAMPLE...");
         File file;
-        file = File(pathToSave).getChildFile("continuation.mid");
+        file = File(pathToSave).getChildFile("sample.mid");
         if (!cond)
         {
             return;

@@ -19,7 +19,7 @@ class ModelServer():
     # read the uploaded file
     def store(self, myFile):
         return self.model.store(myFile)
-    
+
 
 
     @cherrypy.expose
